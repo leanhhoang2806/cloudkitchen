@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    networks:
+      - your_network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: your_dbname
+      POSTGRES_USER: your_user
+      POSTGRES_PASSWORD: your_password
+    ports:
+      - "5432:5432"
+    networks:
+      - your_network
+      
+  flyway:
+    image: boxfuse/flyway:latest-alpine
+    volumes:
+      - ./migrations:/flyway/sql
+    depends_on:
+      - postgres
+    command: ["-url=jdbc:postgresql://localhost:5432/your_dbname", "-user=your_user", "-password=your_password", "-connectRetries=60", "migrate"]
+    network_mode: "host"
+networks:
+  your_network:
