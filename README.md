@@ -5,4 +5,5 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/your_dbname
 
 # to run integration test
 1. Spin up all needed containers
-2. Run the test suite from the command line `cloudkitchen-BE hoang$ pytest src/tests/`
+2. `export PYTHONDONTWRITEBYTECODE=1`
+3. Run the test suite from the command line `cloudkitchen-BE hoang$ pytest src/tests/`
