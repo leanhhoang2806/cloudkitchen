@@ -1,17 +1,17 @@
-from dataclasses import dataclass
 import logging
 import jwt
 from src.managers.configuration_manager import CONFIG
+from fastapi import HTTPException
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
-@dataclass
 class JsonWebToken:
     """Perform JSON Web Token (JWT) validation using PyJWT"""
 
     def __init__(self):
-        self.auth0_issuer_url = CONFIG.ISSUER
+        self.auth0_issuer_url = CONFIG.AUTH0_ISSUER
         self.auth0_audience = CONFIG.API_IDENTIFIER
         self.algorithm = "RS256"
         self.jwks_uri = f"{self.auth0_issuer_url}.well-known/jwks.json"
@@ -29,5 +29,6 @@ class JsonWebToken:
                 leeway=300,  # 5 minutes leeway (adjust as needed)
             )
             return payload
-        except Exception:
-            raise Exception("Invalid token")
+        except Exception as e:
+            logger.error(f"An unexpected error occurred: {e}")
+            raise HTTPException(status_code=401, detail="Failed validation")

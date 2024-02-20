@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routes import health, profiles
+from src.routes import health, seller_info
 
 app = FastAPI()
 
@@ -18,4 +18,4 @@ app.add_middleware(
 
 
 app.include_router(health.router, prefix="/api/v1")
-app.include_router(profiles.router, prefix="/api/v1")
+app.include_router(seller_info.router, prefix="/api/v1")
