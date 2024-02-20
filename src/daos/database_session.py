@@ -6,12 +6,17 @@ from src.managers.configuration_manager import CONFIG
 class Database:
     def __init__(self, db_url):
         self.engine = create_engine(db_url)
+        print("db_url", db_url)
         self.SessionLocal = sessionmaker(
             autocommit=False, autoflush=False, bind=self.engine
         )
 
     def get_session(self) -> Session:
-        return sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
+        db = self.SessionLocal()
+        try:
+            return db
+        finally:
+            db.close()
 
 
 db = Database(CONFIG.POSTGRES_DATABASE_URL)

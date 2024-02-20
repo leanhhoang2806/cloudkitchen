@@ -11,6 +11,7 @@ services:
       - your_network
     depends_on:
       - postgres
+      - flyway
 
   postgres:
     image: postgres:12
