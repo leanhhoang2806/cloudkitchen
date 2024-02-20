@@ -1,12 +1,8 @@
-from typing import TypeVar, Generic, Type
-from src.models.postgres_model import Base
 from src.daos.database_session import session
 
-ModelType = TypeVar("ModelType", bound=Base)
 
-
-class BaseDAO(Generic[ModelType]):
-    def __init__(self, model: Type[ModelType]):
+class GenericDAO:
+    def __init__(self, model):
         self.model = model
 
     def create(self, data):
@@ -19,16 +15,18 @@ class BaseDAO(Generic[ModelType]):
         finally:
             session.close()
 
-    def get(self, item_id):
+    def get(self, instance_id):
         try:
-            return session.query(self.model).filter(self.model.id == item_id).first()
+            return (
+                session.query(self.model).filter(self.model.id == instance_id).first()
+            )
         finally:
             session.close()
 
-    def update(self, item_id, data):
+    def update(self, instance_id, data):
         try:
             instance = (
-                session.query(self.model).filter(self.model.id == item_id).first()
+                session.query(self.model).filter(self.model.id == instance_id).first()
             )
             if instance:
                 for key, value in data.dict().items():
@@ -39,10 +37,10 @@ class BaseDAO(Generic[ModelType]):
         finally:
             session.close()
 
-    def delete(self, item_id):
+    def delete(self, instance_id):
         try:
             deleted_count = (
-                session.query(self.model).filter(self.model.id == item_id).delete()
+                session.query(self.model).filter(self.model.id == instance_id).delete()
             )
             session.commit()
             return deleted_count
