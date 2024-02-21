@@ -82,3 +82,4 @@ class Purchase(Base):
 
 
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
+DishPydantic = sqlalchemy_to_pydantic(Dish)

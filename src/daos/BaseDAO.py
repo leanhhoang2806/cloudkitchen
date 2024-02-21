@@ -1,4 +1,5 @@
 from src.daos.database_session import session
+from uuid import UUID
 
 
 class GenericDAO:
@@ -7,7 +8,8 @@ class GenericDAO:
 
     def create(self, data):
         try:
-            instance = self.model(**data.dict())
+            data_dict = self._convert_uuids_to_strings(data.dict())
+            instance = self.model(**data_dict)
             session.add(instance)
             session.commit()
             session.refresh(instance)
@@ -46,3 +48,12 @@ class GenericDAO:
             return deleted_count
         finally:
             session.close()
+
+    def _convert_uuids_to_strings(self, data_dict):
+        converted_data = {}
+        for key, value in data_dict.items():
+            if isinstance(value, UUID):
+                converted_data[key] = str(value)
+            else:
+                converted_data[key] = value
+        return converted_data

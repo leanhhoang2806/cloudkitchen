@@ -12,6 +12,7 @@ services:
     depends_on:
       - postgres
       - flyway
+      - localstack
 
   postgres:
     image: postgres:12
@@ -32,5 +33,17 @@ services:
       - postgres
     command: ["-url=jdbc:postgresql://localhost:5432/your_dbname", "-user=your_user", "-password=your_password", "-connectRetries=60", "migrate"]
     network_mode: "host"
+
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+    networks:
+      - your_network
+
 networks:
   your_network:
