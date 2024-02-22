@@ -25,6 +25,7 @@ class BuyerInfo(Base):
     email = Column(String(255), nullable=False)
     phone = Column(String(20))
     address = Column(String(255))
+    seller_id = Column(UUID)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
@@ -83,3 +84,4 @@ class Purchase(Base):
 
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
 DishPydantic = sqlalchemy_to_pydantic(Dish)
+BuyerPydantic = sqlalchemy_to_pydantic(BuyerInfo)

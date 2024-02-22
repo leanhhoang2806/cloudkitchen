@@ -19,6 +19,7 @@ CREATE TABLE Buyer_Info (
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     address VARCHAR(255),
+    seller_id UUID DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 

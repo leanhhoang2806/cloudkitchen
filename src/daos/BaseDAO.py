@@ -17,18 +17,22 @@ class GenericDAO:
         finally:
             session.close()
 
-    def get(self, instance_id):
+    def get(self, instance_id: UUID):
         try:
             return (
-                session.query(self.model).filter(self.model.id == instance_id).first()
+                session.query(self.model)
+                .filter(self.model.id == str(instance_id))
+                .first()
             )
         finally:
             session.close()
 
-    def update(self, instance_id, data):
+    def update(self, instance_id: UUID, data):
         try:
             instance = (
-                session.query(self.model).filter(self.model.id == instance_id).first()
+                session.query(self.model)
+                .filter(self.model.id == str(instance_id))
+                .first()
             )
             if instance:
                 for key, value in data.dict().items():
@@ -39,10 +43,12 @@ class GenericDAO:
         finally:
             session.close()
 
-    def delete(self, instance_id):
+    def delete(self, instance_id: UUID):
         try:
             deleted_count = (
-                session.query(self.model).filter(self.model.id == instance_id).delete()
+                session.query(self.model)
+                .filter(self.model.id == str(instance_id))
+                .delete()
             )
             session.commit()
             return deleted_count

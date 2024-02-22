@@ -1,6 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from src.routes import health, seller_info, dish_router, media_upload_router
+from src.routes import (
+    health,
+    seller_info,
+    dish_router,
+    media_upload_router,
+    buyer_router,
+)
 
 app = FastAPI()
 
@@ -21,3 +27,4 @@ app.include_router(health.router, prefix="/api/v1")
 app.include_router(seller_info.router, prefix="/api/v1")
 app.include_router(dish_router.router, prefix="/api/v1")
 app.include_router(media_upload_router.router, prefix="/api/v1")
+app.include_router(buyer_router.router, prefix="/api/v1")
