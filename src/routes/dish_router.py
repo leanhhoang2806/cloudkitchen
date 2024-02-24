@@ -5,9 +5,21 @@ from src.models.data_model import DishCreate, DishUpdate
 from src.models.postgres_model import DishPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
+from typing import Optional, List
 
 router = CustomAPIRouter()
 dish_manager = DishManager()
+
+
+@router.get("/dish/seller/{seller_id}", response_model=Optional[List[DishPydantic]])
+async def get_dish_by_seller_id(
+    seller_id: UUID,
+    token=Depends(validate_token),
+):
+    dishes = dish_manager.get_by_seller_id(seller_id)
+    if not dishes:
+        return None
+    return [DishPydantic.from_orm(dish) for dish in dishes]
 
 
 @router.get("/dish/{dish_id}", response_model=DishPydantic)

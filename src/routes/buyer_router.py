@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.buyer_manager import BuyerManager
 from src.models.data_model import BuyerInfoCreate, BuyerInfoUpdate
@@ -6,8 +6,18 @@ from src.models.postgres_model import BuyerPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 
+
 router = CustomAPIRouter()
 buyer_manager = BuyerManager()
+
+
+@router.get("/buyer}", response_model=BuyerPydantic)
+async def get_buyer_by_email(
+    email: str = Query(...),
+    token=Depends(validate_token),
+):
+    buyer = buyer_manager.get_by_email(email)
+    return BuyerPydantic.from_orm(buyer)
 
 
 @router.get("/buyer/{buyer_id}", response_model=BuyerPydantic)

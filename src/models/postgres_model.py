@@ -21,7 +21,7 @@ class BuyerInfo(Base):
     __tablename__ = "buyer_info"
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
-    name = Column(String(255), nullable=False)
+    name = Column(String(255))
     email = Column(String(255), nullable=False)
     phone = Column(String(20))
     address = Column(String(255))
@@ -34,7 +34,7 @@ class SellerInfo(Base):
     __tablename__ = "seller_info"
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
-    name = Column(String(255), nullable=False)
+    name = Column(String(255))
     email = Column(String(255), nullable=False)
     phone = Column(String(20))
     address = Column(String(255))
@@ -49,6 +49,7 @@ class Dish(Base):
     name = Column(String(255), nullable=False)
     description = Column(Text)
     price = Column(Numeric(10, 2), nullable=False)
+    s3_path = Column(String(255))
     seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))

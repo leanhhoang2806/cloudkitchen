@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE Seller_Info (
     id UUID DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     address VARCHAR(255),
@@ -15,7 +15,7 @@ CREATE TABLE Seller_Info (
 
 CREATE TABLE Buyer_Info (
     id UUID DEFAULT uuid_generate_v4(),
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(255),
     email VARCHAR(255) NOT NULL,
     phone VARCHAR(20),
     address VARCHAR(255),

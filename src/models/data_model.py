@@ -8,6 +8,7 @@ class BuyerInfoCreate(BaseModel):
     email: str
     phone: Optional[str]
     address: Optional[str]
+    request_email: str
 
 
 class BuyerInfoUpdate(BaseModel):
