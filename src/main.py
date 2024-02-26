@@ -6,6 +6,9 @@ from src.routes import (
     dish_router,
     media_upload_router,
     buyer_router,
+    order_router,
+    featured_dish_router,
+    search_router,
 )
 
 app = FastAPI()
@@ -28,3 +31,6 @@ app.include_router(seller_info.router, prefix="/api/v1")
 app.include_router(dish_router.router, prefix="/api/v1")
 app.include_router(media_upload_router.router, prefix="/api/v1")
 app.include_router(buyer_router.router, prefix="/api/v1")
+app.include_router(order_router.router, prefix="/api/v1")
+app.include_router(featured_dish_router.router, prefix="/api/v1")
+app.include_router(search_router.router, prefix="/api/v1")

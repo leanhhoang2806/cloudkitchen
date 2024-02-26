@@ -42,10 +42,12 @@ CREATE TABLE Dish (
 CREATE TABLE Orders (
     id UUID DEFAULT uuid_generate_v4(),
     buyer_id UUID NOT NULL,
+    seller_id UUID NOT NULL,
     total_amount DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
+    FOREIGN KEY (seller_id) REFERENCES Seller_Info(id),
     PRIMARY KEY (id)
 );
 
@@ -57,6 +59,29 @@ CREATE TABLE Purchases (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (order_id) REFERENCES Orders(id),
+    FOREIGN KEY (dish_id) REFERENCES Dish(id),
+    PRIMARY KEY (id)
+);
+
+
+CREATE TABLE Payments (
+    id UUID DEFAULT uuid_generate_v4(),
+    email VARCHAR(255) NOT NULL,
+    picture_upload_limit INT NOT NULL,
+    dishes_to_feature_limit INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (id)
+);
+
+
+CREATE TABLE Featured_dish (
+    id UUID DEFAULT uuid_generate_v4(),
+    dish_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
     FOREIGN KEY (dish_id) REFERENCES Dish(id),
     PRIMARY KEY (id)
 );

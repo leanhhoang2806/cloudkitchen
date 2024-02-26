@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.dish_manager import DishManager
 from src.models.data_model import DishCreate, DishUpdate
@@ -29,6 +29,16 @@ async def get_dish(
 ):
     dish = dish_manager.get(dish_id)
     return DishPydantic.from_orm(dish)
+
+
+@router.get("/dish/", response_model=Optional[List[DishPydantic]])
+async def get_dishes_paginated(
+    skip: int = Query(0, description="Skip the first N dishes"),
+    limit: int = Query(10, description="Limit the number of dishes returned"),
+    token=Depends(validate_token),
+):
+    dishes = dish_manager.get_dishes_paginated(skip=skip, limit=limit)
+    return [DishPydantic.from_orm(dish) for dish in dishes]
 
 
 @router.post("/dish/", response_model=DishPydantic)

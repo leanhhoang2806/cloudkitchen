@@ -9,5 +9,5 @@ class BuyerManager(GenericManager):
     def get_by_email(self, email):
         buyer = self.dao.get_by_email(email)
         if not buyer:
-            self.dao.create_with_email_only(email)
-        return self.dao.get_by_email(email)
+            buyer = self.dao.create_with_email_only(email)
+        return buyer

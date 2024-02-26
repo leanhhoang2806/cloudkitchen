@@ -62,6 +62,7 @@ class Order(Base):
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
+    seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
     total_amount = Column(Numeric(10, 2), nullable=False)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
@@ -83,6 +84,31 @@ class Purchase(Base):
     order = relationship("Order")
 
 
+class FeaturedDish(Base):
+    __tablename__ = "featured_dish"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    dish_id = Column(ForeignKey("dish.id"), nullable=False)
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+    dish = relationship("Dish")
+
+
+class Payment(Base):
+    __tablename__ = "payments"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    email = Column(String(255), nullable=False)
+    picture_upload_limit = Column(Integer, nullable=False)
+    dishes_to_feature_limit = Column(Integer, nullable=False)
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
 DishPydantic = sqlalchemy_to_pydantic(Dish)
 BuyerPydantic = sqlalchemy_to_pydantic(BuyerInfo)
+OrderPydantic = sqlalchemy_to_pydantic(Order)
+FeatureDishPydantic = sqlalchemy_to_pydantic(FeaturedDish)
+PaymentPydantic = sqlalchemy_to_pydantic(Payment)

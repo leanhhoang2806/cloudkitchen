@@ -66,3 +66,25 @@ class PurchaseUpdate(BaseModel):
     order_id: UUID
     dish_id: UUID
     quantity: int
+
+
+class PaymentsCreate(BaseModel):
+    email: str
+    picture_upload_limit: int
+    dishes_to_feature_limit: int
+
+
+class PaymentsUpdate(BaseModel):
+    picture_upload_limit: Optional[int]
+    dishes_to_feature_limit: Optional[int]
+
+
+class Payments(BaseModel):
+    id: UUID
+    email: str
+    picture_upload_limit: int
+    dishes_to_feature_limit: int
+
+
+class FeaturedDishCreate(BaseModel):
+    dish_id: UUID
