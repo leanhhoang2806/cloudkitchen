@@ -1,5 +1,11 @@
 from src.daos.database_session import session
 from uuid import UUID
+from sqlalchemy.exc import IntegrityError
+from src.errors.custom_exceptions import UniqueViolationException
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 class GenericDAO:
@@ -14,6 +20,9 @@ class GenericDAO:
             session.commit()
             session.refresh(instance)
             return instance
+        except IntegrityError as e:
+            logging.error(e)
+            raise UniqueViolationException()
         finally:
             session.close()
 

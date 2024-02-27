@@ -1,11 +1,10 @@
 from functools import wraps
 from fastapi import HTTPException
-from src.errors.custom_exceptions import InvalidTokenException
+from src.errors.custom_exceptions import InvalidTokenException, UniqueViolationException
 import logging
 
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 def handle_exceptions(func):
@@ -17,6 +16,10 @@ def handle_exceptions(func):
             logging.error(e)
             if isinstance(e, InvalidTokenException):
                 raise HTTPException(status_code=401, detail="Invalid token")
+            if isinstance(e, UniqueViolationException):
+                raise HTTPException(
+                    status_code=400, detail="Unique Constraint Violation"
+                )
             raise HTTPException(status_code=500, detail="Internal server error")
 
     return wrapper

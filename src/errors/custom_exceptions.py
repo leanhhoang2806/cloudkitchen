@@ -9,3 +9,9 @@ class InvalidTokenException(Exception):
     def __init__(self, message="Invalid token"):
         self.message = message
         super().__init__(self.message)
+
+
+class UniqueViolationException(Exception):
+    def __init__(self, message="Unique constraint violation"):
+        self.message = message
+        super().__init__(self.message)

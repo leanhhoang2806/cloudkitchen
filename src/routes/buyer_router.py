@@ -11,7 +11,7 @@ router = CustomAPIRouter()
 buyer_manager = BuyerManager()
 
 
-@router.get("/buyer}", response_model=BuyerPydantic)
+@router.get("/buyer/", response_model=BuyerPydantic)
 async def get_buyer_by_email(
     email: str = Query(...),
     token=Depends(validate_token),
