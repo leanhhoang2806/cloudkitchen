@@ -12,7 +12,7 @@ seller_info_manager = SellerInfoManager()
 
 
 @router.get("/seller_info/", response_model=Optional[SellerInfoPydantic])
-async def get_buyer_by_email(
+async def get_seller_by_email(
     email: str = Query(...),
     token=Depends(validate_token),
 ):
