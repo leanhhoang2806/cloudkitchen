@@ -1,13 +1,30 @@
-from src.models.postgres_model import Order
+from src.models.postgres_model import Order, OrdersDish
+from src.models.data_model import OrderCreate, OrderCreateWithBuyerId
 from src.daos.BaseDAO import GenericDAO
 from src.daos.database_session import session
 from uuid import UUID
 from typing import Optional
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
 
 
 class OrderDAO(GenericDAO):
     def __init__(self):
         super().__init__(Order)
+
+    def create_then_add_to_order_dish(self, data: OrderCreate):
+        try:
+            instance = self.create(OrderCreateWithBuyerId(buyer_id=data.buyer_id))
+            [
+                session.add(OrdersDish(order_id=instance.id, dish_id=str(dish_id)))
+                for dish_id in data.dish_id
+            ]
+            session.commit()
+            return instance
+        finally:
+            session.close()
 
     def get_by_seller_id(self, seller_id: UUID) -> Optional[Order]:
         try:

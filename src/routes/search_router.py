@@ -1,5 +1,4 @@
-from fastapi import Depends, Query
-from src.validations.validators import validate_token
+from fastapi import Query
 from src.managers.dish_manager import DishManager
 from src.managers.search_manager import SearchManager
 from src.models.postgres_model import DishPydantic
@@ -14,7 +13,6 @@ search_manager = SearchManager(DishManager())
 async def search_dishes(
     seller_name: str = Query(..., description="Name of the seller"),
     zip_code: str = Query(..., description="Zip code"),
-    token=Depends(validate_token),
 ):
     dishes = search_manager.search_by_name_and_zip(seller_name, zip_code)
     return [DishPydantic.from_orm(dish) for dish in dishes]

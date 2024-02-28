@@ -1,6 +1,7 @@
 from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.featured_dish_manager import FeaturedDishManager
+from src.managers.dish_manager import DishManager
 from src.models.postgres_model import FeatureDishPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
@@ -8,6 +9,7 @@ from src.models.data_model import FeaturedDishCreate
 from typing import Optional, List
 
 router = CustomAPIRouter()
+dish_manager = DishManager()
 featured_dish_manager = FeaturedDishManager()
 
 
@@ -15,7 +17,6 @@ featured_dish_manager = FeaturedDishManager()
 async def get_featured_dishes(
     skip: int = Query(0, description="Skip the first N featured dishes"),
     limit: int = Query(10, description="Limit the number of featured dishes returned"),
-    token=Depends(validate_token),
 ):
     featured_dishes = featured_dish_manager.get_featured_dish_paginated(
         skip=skip, limit=limit
@@ -31,6 +32,7 @@ async def add_featured_dish(
     token=Depends(validate_token),
 ):
     featured_dish = featured_dish_manager.create(feature_dish)
+    dish_manager.update_when_feature(feature_dish.dish_id)
     return FeatureDishPydantic.from_orm(featured_dish)
 
 

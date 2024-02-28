@@ -33,6 +33,7 @@ CREATE TABLE Dish (
     price DECIMAL(10, 2) NOT NULL,
     s3_path VARCHAR(255),
     seller_id UUID NOT NULL,
+    is_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (seller_id) REFERENCES Seller_Info(id),
@@ -42,12 +43,20 @@ CREATE TABLE Dish (
 CREATE TABLE Orders (
     id UUID DEFAULT uuid_generate_v4(),
     buyer_id UUID NOT NULL,
-    seller_id UUID NOT NULL,
-    total_amount DECIMAL(10, 2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
-    FOREIGN KEY (seller_id) REFERENCES Seller_Info(id),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE Orders_Dish(
+    id UUID DEFAULT uuid_generate_v4(),
+    order_id UUID NOT NULL,
+    dish_id UUID NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES Orders(id),
+    FOREIGN KEY (dish_id) REFERENCES Dish(id),
     PRIMARY KEY (id)
 );
 

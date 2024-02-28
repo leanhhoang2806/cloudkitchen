@@ -2,6 +2,7 @@ from src.daos.Dish_DAO import DishDAO
 from src.managers.generic_manager import GenericManager
 from typing import Optional, List
 from src.models.postgres_model import Dish
+from uuid import UUID
 
 
 class DishManager(GenericManager):
@@ -16,3 +17,6 @@ class DishManager(GenericManager):
 
     def search_by_name_and_zip(self, name: str, zipcode: str) -> Optional[List[Dish]]:
         return self.dao.search_by_name_and_zip(name, zipcode)
+
+    def update_when_feature(self, dish_id: UUID) -> Dish:
+        return self.dao.update_when_feature(dish_id)

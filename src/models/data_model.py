@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 
@@ -48,7 +48,11 @@ class DishUpdate(BaseModel):
 
 class OrderCreate(BaseModel):
     buyer_id: UUID
-    total_amount: float
+    dish_id: List[UUID]
+
+
+class OrderCreateWithBuyerId(BaseModel):
+    buyer_id: UUID
 
 
 class OrderUpdate(BaseModel):

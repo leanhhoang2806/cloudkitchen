@@ -35,7 +35,6 @@ async def get_dish(
 async def get_dishes_paginated(
     skip: int = Query(0, description="Skip the first N dishes"),
     limit: int = Query(10, description="Limit the number of dishes returned"),
-    token=Depends(validate_token),
 ):
     dishes = dish_manager.get_dishes_paginated(skip=skip, limit=limit)
     return [DishPydantic.from_orm(dish) for dish in dishes]

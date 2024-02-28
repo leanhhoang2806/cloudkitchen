@@ -9,6 +9,9 @@ class OrderManager(GenericManager):
     def __init__(self):
         super().__init__(OrderDAO())
 
+    def create(self, data):
+        return self.dao.create_then_add_to_order_dish(data)
+
     def get_by_seller_id(self, seller_id):
         return self.dao.get_by_seller_id(seller_id)
 

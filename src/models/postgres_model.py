@@ -8,6 +8,7 @@ from sqlalchemy import (
     String,
     Text,
     text,
+    Boolean,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
@@ -51,6 +52,7 @@ class Dish(Base):
     price = Column(Numeric(10, 2), nullable=False)
     s3_path = Column(String(255))
     seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
+    is_featured = Column(Boolean, server_default=text("false"))
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
@@ -62,8 +64,6 @@ class Order(Base):
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
-    seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
-    total_amount = Column(Numeric(10, 2), nullable=False)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
@@ -104,6 +104,19 @@ class Payment(Base):
     dishes_to_feature_limit = Column(Integer, nullable=False)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+
+class OrdersDish(Base):
+    __tablename__ = "orders_dish"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    order_id = Column(ForeignKey("orders.id"), nullable=False)
+    dish_id = Column(ForeignKey("dish.id"), nullable=False)
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+    dish = relationship("Dish")
+    order = relationship("Order")
 
 
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
