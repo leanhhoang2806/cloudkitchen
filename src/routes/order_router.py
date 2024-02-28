@@ -2,24 +2,24 @@ from fastapi import Depends
 from src.validations.validators import validate_token
 from src.managers.orders_manager import OrderManager
 from src.models.data_model import OrderCreate, OrderUpdate
-from src.models.postgres_model import OrderPydantic
+from src.models.postgres_model import OrderPydantic, DishPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
+from src.managers.Order_dish_manager import OrderDishManager
 from typing import Optional, List
 
 router = CustomAPIRouter()
 order_manager = OrderManager()
+order_dish_manager = OrderDishManager()
 
 
-@router.get("/order/seller/{seller_id}", response_model=Optional[List[OrderPydantic]])
+@router.get("/order/seller/{seller_id}", response_model=Optional[List[DishPydantic]])
 async def get_order_by_seller_id(
     seller_id: UUID,
     token=Depends(validate_token),
 ):
-    orders = order_manager.get_by_seller_id(seller_id)
-    if not orders:
-        return None
-    return [OrderPydantic.from_orm(order) for order in orders]
+    dishes = order_dish_manager.get_order_for_seller(seller_id)
+    return [DishPydantic.from_orm(dish) for dish in dishes]
 
 
 @router.get("/order/buyer/{buyer_id}", response_model=Optional[List[OrderPydantic]])
