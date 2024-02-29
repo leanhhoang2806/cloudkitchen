@@ -1,0 +1,18 @@
+# Use a Python base image
+FROM python:3.10
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file and install dependencies
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the test scripts into the container
+COPY . /app/
+ENV PYTHONPATH "${PYTHONPATH}:/app/"
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV SQLALCHEMY_SILENCE_UBER_WARNING 1
+
+# Command to run the tests
+CMD ["pytest", "src/tests/"]

@@ -45,5 +45,20 @@ services:
     networks:
       - your_network
 
+  pytest:
+    build:
+      context: .
+      dockerfile: Dockerfile.pytest
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    networks:
+      - your_network
+    depends_on:
+      - postgres
+      - flyway
+      - localstack
+
 networks:
   your_network:
