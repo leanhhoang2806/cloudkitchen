@@ -15,6 +15,8 @@ COPY . /app/
 
 # Run linting check
 RUN flake8 . --exclude=myenv
+ENV PYTHONDONTWRITEBYTECODE 1
+
 
 
 # Expose port 8000 to the outside world
