@@ -16,7 +16,6 @@ class S3Uploader:
             region_name="us-east-1",
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
-            endpoint_url="http://localstack:4566",
         )
 
     def create_bucket_if_not_exist(self, bucket_name):
@@ -29,12 +28,11 @@ class S3Uploader:
 
     def upload_to_s3(self, file: UploadFile) -> Optional[str]:
         try:
-            # Upload the file to S3
-            s3_object_key = f"{str(uuid4())}/{file.filename}"
-            self.s3_client.upload_fileobj(file.file, self.bucket_name, s3_object_key)
+            unique_filename = f"{file.filename.split('.')[0]}_{str(uuid4())}.{file.filename.split('.')[-1]}"
+            self.s3_client.upload_fileobj(file.file, self.bucket_name, unique_filename)
 
             # Generate the S3 URL
-            s3_url = f"https://{self.bucket_name}.s3.amazonaws.com/{s3_object_key}"
+            s3_url = f"https://{self.bucket_name}.s3.amazonaws.com/{unique_filename}"
             return s3_url
         except NoCredentialsError:
             # Handle credential errors

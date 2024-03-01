@@ -5,7 +5,7 @@ from src.validations.validators import validate_token
 
 router = APIRouter()
 
-bucket_name = "dish-popo24"
+bucket_name = "popo24-public-read-images"
 s3_uploader = S3Uploader(
     CONFIG.AWS_ACCESS_KEY_ID, CONFIG.AWS_SECRET_ACCESS_KEY, bucket_name
 )

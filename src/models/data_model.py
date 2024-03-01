@@ -37,6 +37,7 @@ class DishCreate(BaseModel):
     description: Optional[str]
     price: float
     seller_id: UUID
+    s3_path: str
 
 
 class DishUpdate(BaseModel):

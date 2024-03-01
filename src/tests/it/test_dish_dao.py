@@ -12,10 +12,18 @@ def test_get_by_seller_id(seller_dao, dish_dao):
     # Create some dummy dishes
     dummy_dishes = [
         DishCreate(
-            name="Dish1", description="Description1", price=10.0, seller_id=seller.id
+            name="Dish1",
+            description="Description1",
+            price=10.0,
+            seller_id=seller.id,
+            s3_path="test",
         ),
         DishCreate(
-            name="Dish2", description="Description2", price=15.0, seller_id=seller.id
+            name="Dish2",
+            description="Description2",
+            price=15.0,
+            seller_id=seller.id,
+            s3_path="test",
         ),
     ]
     for dish_create in dummy_dishes:
@@ -39,6 +47,7 @@ def test_get_dishes_paginated(seller_dao, dish_dao):
             description=f"Description{i}",
             price=10.0,
             seller_id=seller.id,
+            s3_path="test",
         )
         for i in range(1, 11)
     ]
