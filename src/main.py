@@ -9,6 +9,7 @@ from src.routes import (
     order_router,
     featured_dish_router,
     search_router,
+    payment_router,
 )
 
 app = FastAPI()
@@ -34,3 +35,4 @@ app.include_router(buyer_router.router, prefix="/api/v1")
 app.include_router(order_router.router, prefix="/api/v1")
 app.include_router(featured_dish_router.router, prefix="/api/v1")
 app.include_router(search_router.router, prefix="/api/v1")
+app.include_router(payment_router.router, prefix="/api/v1")

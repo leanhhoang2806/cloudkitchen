@@ -79,8 +79,10 @@ CREATE TABLE Payments (
     email VARCHAR(255) NOT NULL,
     picture_upload_limit INT NOT NULL,
     dishes_to_feature_limit INT NOT NULL,
+    seller_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (seller_id) REFERENCES Seller_Info(id),
 
     PRIMARY KEY (id)
 );

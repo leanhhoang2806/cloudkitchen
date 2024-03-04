@@ -34,7 +34,7 @@ async def create_seller_info(
     seller_info_data: SellerInfoCreate,
     token=Depends(validate_token),
 ):
-    seller_info = seller_info_manager.create(seller_info_data)
+    seller_info = seller_info_manager.create_with_payment_limit(seller_info_data)
     return SellerInfoPydantic.from_orm(seller_info)
 
 

@@ -103,8 +103,11 @@ class Payment(Base):
     email = Column(String(255), nullable=False)
     picture_upload_limit = Column(Integer, nullable=False)
     dishes_to_feature_limit = Column(Integer, nullable=False)
+    seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+    seller = relationship("SellerInfo")
 
 
 class OrdersDish(Base):
