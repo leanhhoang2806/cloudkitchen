@@ -23,13 +23,14 @@ class SellerInfoCreate(BaseModel):
     email: str
     phone: Optional[str]
     address: Optional[str]
+    zipcode: str
 
 
 class SellerInfoUpdate(BaseModel):
     name: str
-    email: str
     phone: Optional[str]
     address: Optional[str]
+    zipcode: Optional[str]
 
 
 class DishCreate(BaseModel):

@@ -56,3 +56,15 @@ class DishDAO(GenericDAO):
             return session.query(Dish).filter(Dish.id == str(dish_id)).first()
         finally:
             session.close()
+
+    def get_dishes_by_ids(self, dish_ids: List[UUID]) -> Optional[List[Dish]]:
+        try:
+            # Query dishes based on the provided list of dish IDs
+            dishes = (
+                session.query(self.model)
+                .filter(self.model.id.in_([str(dish_id) for dish_id in dish_ids]))
+                .all()
+            )
+            return dishes
+        finally:
+            session.close()

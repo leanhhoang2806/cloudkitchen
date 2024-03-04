@@ -20,3 +20,6 @@ class DishManager(GenericManager):
 
     def update_when_feature(self, dish_id: UUID) -> Dish:
         return self.dao.update_when_feature(dish_id)
+
+    def get_dishes_by_ids(self, dish_ids: List[UUID]) -> Optional[List[Dish]]:
+        return self.dao.get_dishes_by_ids(dish_ids)

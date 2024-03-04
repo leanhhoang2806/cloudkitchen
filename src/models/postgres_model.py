@@ -36,9 +36,10 @@ class SellerInfo(Base):
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     name = Column(String(255))
-    email = Column(String(255), nullable=False)
+    email = Column(String(255), nullable=False, unique=True)
     phone = Column(String(20))
     address = Column(String(255))
+    zipcode = Column(String(15), nullable=False)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 

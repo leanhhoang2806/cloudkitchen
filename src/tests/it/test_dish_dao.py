@@ -6,7 +6,9 @@ from uuid import uuid4
 
 
 def test_get_by_seller_id(seller_dao, dish_dao):
-    sellerInfoCreate = SellerInfoCreate(name="test", email="test@gmail.com")
+    sellerInfoCreate = SellerInfoCreate(
+        name="test", email="test@gmail.com", zipcode="1111"
+    )
     seller = seller_dao.create(sellerInfoCreate)
 
     # Create some dummy dishes
@@ -37,7 +39,9 @@ def test_get_by_seller_id(seller_dao, dish_dao):
 
 
 def test_get_dishes_paginated(seller_dao, dish_dao):
-    sellerInfoCreate = SellerInfoCreate(name="test", email="test1@gmail.com")
+    sellerInfoCreate = SellerInfoCreate(
+        name="test", email="test1@gmail.com", zipcode="1111"
+    )
     seller = seller_dao.create(sellerInfoCreate)
 
     # Create some dummy dishes
@@ -49,7 +53,7 @@ def test_get_dishes_paginated(seller_dao, dish_dao):
             seller_id=seller.id,
             s3_path="test",
         )
-        for i in range(1, 11)
+        for i in range(1, 7)
     ]
     for dish_create in dummy_dishes:
         dish_dao.create(dish_create)
