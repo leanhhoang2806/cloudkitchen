@@ -6,12 +6,18 @@ class ServerException(Exception):
 
 
 class InvalidTokenException(Exception):
-    def __init__(self, message="Invalid token"):
+    def __init__(self, message="Invalid token") -> None:
         self.message = message
         super().__init__(self.message)
 
 
 class UniqueViolationException(Exception):
-    def __init__(self, message="Unique constraint violation"):
+    def __init__(self, message="Unique constraint violation") -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
+class MediaUploadLimitException(Exception):
+    def __init__(self, message="Maximum Media Upload allowed") -> None:
         self.message = message
         super().__init__(self.message)
