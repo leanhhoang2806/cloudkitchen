@@ -31,6 +31,15 @@ async def get_dish(
     return DishPydantic.from_orm(dish)
 
 
+@router.get("/dish/featured/ids", response_model=List[DishPydantic])
+async def get_dishes(
+    dish_ids: List[UUID] = Query(...),
+    token=Depends(validate_token),
+):
+    dishes = [dish_manager.get(dish_id) for dish_id in dish_ids]
+    return [DishPydantic.from_orm(dish) for dish in dishes]
+
+
 @router.get("/dish/", response_model=Optional[List[DishPydantic]])
 async def get_dishes_paginated(
     skip: int = Query(0, description="Skip the first N dishes"),
