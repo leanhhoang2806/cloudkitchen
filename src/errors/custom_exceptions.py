@@ -21,3 +21,11 @@ class MediaUploadLimitException(Exception):
     def __init__(self, message="Maximum Media Upload allowed") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class BothSearchTermEmpty(Exception):
+    def __init__(
+        self, message="Both Zipcode and name in the search term are empty"
+    ) -> None:
+        self.message = message
+        super().__init__(self.message)

@@ -15,8 +15,14 @@ class DishManager(GenericManager):
     def get_dishes_paginated(self, skip: int, limit: int) -> Optional[List[Dish]]:
         return self.dao.get_dishes_paginated(skip, limit)
 
-    def search_by_name_and_zip(self, name: str, zipcode: str) -> Optional[List[Dish]]:
-        return self.dao.search_by_name_and_zip(name, zipcode)
+    def search_by_name(self, name: str) -> Optional[List[Dish]]:
+        return self.dao.search_by_name(name)
+
+    def search_by_seller_zipcodes(self, zipcodes: List[int]) -> Optional[List[Dish]]:
+        return self.dao.search_by_seller_zipcodes(zipcodes)
+
+    def search_by_name_and_zipcode(self, name: str, zipcode: str):
+        return self.search_by_zipcode(zipcode)  # make this a placeholder for now
 
     def update_when_feature(self, dish_id: UUID) -> Dish:
         return self.dao.update_when_feature(dish_id)

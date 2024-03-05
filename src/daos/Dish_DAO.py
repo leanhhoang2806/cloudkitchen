@@ -68,3 +68,16 @@ class DishDAO(GenericDAO):
             return dishes
         finally:
             session.close()
+
+    def search_by_seller_zipcodes(self, zipcodes: List[int]) -> Optional[List[Dish]]:
+        try:
+            zipcodeds_str = [str(zipcode) for zipcode in zipcodes]
+            dishes = (
+                session.query(Dish)
+                .join(SellerInfo)
+                .filter(SellerInfo.zipcode.in_(zipcodeds_str))
+                .all()
+            )
+            return dishes
+        finally:
+            session.close()

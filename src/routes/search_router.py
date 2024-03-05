@@ -11,8 +11,8 @@ search_manager = SearchManager(DishManager())
 
 @router.get("/search/", response_model=Optional[List[DishPydantic]])
 async def search_dishes(
-    seller_name: str = Query(..., description="Name of the seller"),
-    zip_code: str = Query(..., description="Zip code"),
+    seller_name: Optional[str] = Query(..., description="Name of the seller"),
+    zip_code: Optional[str] = Query(..., description="Zip code"),
 ):
     dishes = search_manager.search_by_name_and_zip(seller_name, zip_code)
     return [DishPydantic.from_orm(dish) for dish in dishes]
