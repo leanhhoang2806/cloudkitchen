@@ -32,10 +32,7 @@ async def get_dish(
 
 
 @router.get("/dish/featured/ids", response_model=List[DishPydantic])
-async def get_dishes(
-    dish_ids: str = Query(...),
-    token=Depends(validate_token),
-):
+async def get_dishes(dish_ids: str = Query(...)):
     all_ids = dish_ids.split(",")
     dishes = [dish_manager.get(dish_id) for dish_id in all_ids]
     return [DishPydantic.from_orm(dish) for dish in dishes]
