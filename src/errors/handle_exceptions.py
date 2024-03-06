@@ -18,21 +18,17 @@ def handle_exceptions(func):
             return await func(*args, **kwargs)
         except Exception as e:
             logging.error(e)
-            exception_map = {
-                InvalidTokenException: {"status_code": 401, "detail": "Invalid token"},
-                UniqueViolationException: {
-                    "status_code": 400,
-                    "detail": str(e),
-                },  # Convert e.message to str(e)
-                MediaUploadLimitException: {
-                    "status_code": 400,
-                    "detail": str(e),
-                },  # Convert e.message to str(e)
-            }
+            exception_map = set(
+                [
+                    InvalidTokenException,
+                    UniqueViolationException,
+                    MediaUploadLimitException,
+                ]
+            )
 
-            for exception_type, response_data in exception_map.items():
-                if isinstance(e, exception_type):
-                    raise HTTPException(**response_data)
+            for exception in exception_map:
+                if isinstance(e, exception):
+                    raise HTTPException(status_code=400, detail=e.message)
 
             raise HTTPException(status_code=500, detail="Internal server error")
 

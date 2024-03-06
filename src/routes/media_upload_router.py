@@ -1,10 +1,12 @@
-from fastapi import APIRouter, File, UploadFile, Depends
+from fastapi import File, UploadFile, Depends
 from src.managers.s3_manager import S3Uploader
 from src.managers.configuration_manager import CONFIG
 from src.validations.validators import validate_token
 from uuid import UUID
+from src.routes.custom_api_router import CustomAPIRouter
 
-router = APIRouter()
+
+router = CustomAPIRouter()
 
 
 bucket_name = "popo24-public-read-images"
