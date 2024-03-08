@@ -7,3 +7,4 @@ class Configuration(BaseModel):
     POSTGRES_DATABASE_URL: str
     AWS_ACCESS_KEY_ID: str
     AWS_SECRET_ACCESS_KEY: str
+    STRIPE_API_KEY: str

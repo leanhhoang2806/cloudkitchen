@@ -107,3 +107,11 @@ class PaymentUpdate(BaseModel):
     email: Optional[str]
     picture_upload_limit: Optional[int]
     dishes_to_feature_limit: Optional[int]
+
+
+class StripeClientSecret(BaseModel):
+    client_secret: str
+
+
+class StripePaymentInfo(BaseModel):
+    dish_ids: List[UUID]

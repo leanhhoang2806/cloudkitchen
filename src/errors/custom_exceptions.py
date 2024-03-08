@@ -29,3 +29,9 @@ class BothSearchTermEmpty(Exception):
     ) -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class GenericTryError(Exception):
+    def __init__(self, message="Generic error on Try") -> None:
+        self.message = message
+        super().__init__(self.message)
