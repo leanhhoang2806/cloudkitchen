@@ -2,6 +2,7 @@ from src.daos.Featured_Dish_DAO import FeaturedDishDAO
 from src.models.postgres_model import FeaturedDish
 from src.managers.generic_manager import GenericManager
 from typing import Optional, List
+from uuid import UUID
 
 
 class FeaturedDishManager(GenericManager):
@@ -12,3 +13,6 @@ class FeaturedDishManager(GenericManager):
         self, skip: int, limit: int
     ) -> Optional[List[FeaturedDish]]:
         return self.dao.get_featured_dish_paginated(skip, limit)
+
+    def delete_by_dish_id(self, dish_id: UUID) -> int:
+        return self.dao.delete_by_dish_id(dish_id)

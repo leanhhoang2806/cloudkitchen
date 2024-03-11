@@ -8,6 +8,12 @@ from src.managers.payment_manager import PaymentManager
 from src.managers.dish_manager import DishManager
 from uuid import UUID
 from src.errors.custom_exceptions import MediaUploadLimitException
+import logging
+
+from src.managers.configuration_manager import CONFIG
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class S3Uploader:
@@ -48,7 +54,21 @@ class S3Uploader:
             # Handle credential errors
             return None
 
+    def delete_from_s3(self, object_path: str) -> bool:
+        try:
+            self.s3_client.delete_object(Bucket=self.bucket_name, Key=object_path)
+            return True
+        except Exception as e:
+            logger.error(e)
+            return False
+
     def _is_allowed_to_upload(self, seller_id: UUID) -> bool:
         payment_info = self.payment_manager.get_by_seller_id(seller_id)
         dishes_owned_by_seller = self.dish_manager.get_by_seller_id(seller_id)
         return payment_info.picture_upload_limit > len(dishes_owned_by_seller)
+
+
+BUCKET_NAME = "popo24-public-read-images"
+S3_UPLOADER = S3Uploader(
+    CONFIG.AWS_ACCESS_KEY_ID, CONFIG.AWS_SECRET_ACCESS_KEY, BUCKET_NAME
+)

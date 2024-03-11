@@ -2,9 +2,10 @@ from src.models.postgres_model import Dish, SellerInfo
 from src.daos.BaseDAO import GenericDAO
 from typing import Optional, List
 from src.daos.database_session import session
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 from uuid import UUID
 from sqlalchemy import update
+from src.enums.status import Status
 
 
 class DishDAO(GenericDAO):
@@ -14,8 +15,13 @@ class DishDAO(GenericDAO):
     def get_by_seller_id(self, seller_id):
         try:
             return (
-                session.query(self.model)
-                .filter(self.model.seller_id == str(seller_id))
+                session.query(Dish)
+                .filter(
+                    and_(
+                        Dish.seller_id == str(seller_id),
+                        Dish.status == Status.ACTIVE,
+                    )
+                )
                 .all()
             )
         finally:
@@ -44,10 +50,12 @@ class DishDAO(GenericDAO):
         finally:
             session.close()
 
-    def update_when_feature(self, dish_id: UUID) -> Dish:
+    def update_dish_feature(self, dish_id: UUID, is_featured: bool) -> Dish:
         try:
             session.execute(
-                update(Dish).where(Dish.id == str(dish_id)).values(is_featured=True)
+                update(Dish)
+                .where(Dish.id == str(dish_id))
+                .values(is_featured=is_featured)
             )
             # Commit the transaction
             session.commit()
@@ -79,5 +87,17 @@ class DishDAO(GenericDAO):
                 .all()
             )
             return dishes
+        finally:
+            session.close()
+
+    def soft_delete(self, dish_id: UUID) -> Optional[Dish]:
+        try:
+            session.execute(
+                update(Dish)
+                .where(Dish.id == str(dish_id))
+                .values(status=Status.SOFT_DELETE)
+            )
+            session.commit()
+            return session.query(Dish).filter(Dish.id == str(dish_id)).first()
         finally:
             session.close()

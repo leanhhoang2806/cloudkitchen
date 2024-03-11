@@ -32,7 +32,7 @@ async def add_featured_dish(
     token=Depends(validate_token),
 ):
     featured_dish = featured_dish_manager.create(feature_dish)
-    dish_manager.update_when_feature(feature_dish.dish_id)
+    dish_manager.update_dish_feature(feature_dish.dish_id, True)
     return FeatureDishPydantic.from_orm(featured_dish)
 
 
@@ -41,5 +41,6 @@ async def remove_featured_dish(
     dish_id: UUID,
     token=Depends(validate_token),
 ):
-    deleted_count = featured_dish_manager.remove_featured_dish(dish_id)
+    deleted_count = featured_dish_manager.delete_by_dish_id(dish_id)
+    dish_manager.update_dish_feature(dish_id, False)
     return {"deleted_count": deleted_count}

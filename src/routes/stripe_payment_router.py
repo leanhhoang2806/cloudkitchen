@@ -13,4 +13,4 @@ async def payment_amount(
     dish_ids: StripePaymentInfo,
     token=Depends(validate_token),
 ):
-    return stripe_manager.create_session(dish_ids.dish_ids)
+    return stripe_manager.create_intent(dish_ids.dish_ids)

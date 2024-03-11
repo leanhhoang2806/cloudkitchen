@@ -24,8 +24,11 @@ class DishManager(GenericManager):
     def search_by_name_and_zipcode(self, name: str, zipcode: str):
         return self.search_by_zipcode(zipcode)  # make this a placeholder for now
 
-    def update_when_feature(self, dish_id: UUID) -> Dish:
-        return self.dao.update_when_feature(dish_id)
+    def update_dish_feature(self, dish_id: UUID, is_featured: bool) -> Dish:
+        return self.dao.update_dish_feature(dish_id=dish_id, is_featured=is_featured)
 
     def get_dishes_by_ids(self, dish_ids: List[UUID]) -> Optional[List[Dish]]:
         return self.dao.get_dishes_by_ids(dish_ids)
+
+    def soft_delete(self, dish_id: UUID) -> Optional[Dish]:
+        return self.dao.soft_delete(dish_id)

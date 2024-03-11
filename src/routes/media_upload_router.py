@@ -1,6 +1,5 @@
 from fastapi import File, UploadFile, Depends
-from src.managers.s3_manager import S3Uploader
-from src.managers.configuration_manager import CONFIG
+from src.managers.s3_manager import S3_UPLOADER, BUCKET_NAME
 from src.validations.validators import validate_token
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
@@ -9,12 +8,7 @@ from src.routes.custom_api_router import CustomAPIRouter
 router = CustomAPIRouter()
 
 
-bucket_name = "popo24-public-read-images"
-s3_uploader = S3Uploader(
-    CONFIG.AWS_ACCESS_KEY_ID, CONFIG.AWS_SECRET_ACCESS_KEY, bucket_name
-)
-
-s3_uploader.create_bucket_if_not_exist(bucket_name)
+S3_UPLOADER.create_bucket_if_not_exist(BUCKET_NAME)
 
 
 @router.post("/s3/upload/{seller_id}")
@@ -23,7 +17,7 @@ async def upload_file(
     file: UploadFile = File(...),
     token=Depends(validate_token),
 ):
-    s3_path = s3_uploader.upload_to_s3(file, seller_id)
+    s3_path = S3_UPLOADER.upload_to_s3(file, seller_id)
 
     if s3_path:
         return {"s3_path": s3_path}

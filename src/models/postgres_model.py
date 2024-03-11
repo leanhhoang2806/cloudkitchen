@@ -56,6 +56,7 @@ class Dish(Base):
     is_featured = Column(Boolean, server_default=text("false"))
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    status = Column(String(50), server_default=text("'ACTIVE'::character varying"))
 
     seller = relationship("SellerInfo")
 
