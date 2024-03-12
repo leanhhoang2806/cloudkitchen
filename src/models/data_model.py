@@ -62,6 +62,11 @@ class OrderUpdate(BaseModel):
     total_amount: float
 
 
+class OrderStatusUpdate(BaseModel):
+    status: str
+    buyer_id: UUID
+
+
 class PurchaseCreate(BaseModel):
     order_id: UUID
     dish_id: UUID

@@ -60,3 +60,13 @@ class OrderDAO(GenericDAO):
             )
         finally:
             session.close()
+
+    def update_order_status(self, order_id: UUID, status: str) -> Optional[Order]:
+        try:
+            session.query(Order).filter(Order.id == str(order_id)).update(
+                {"status": status}
+            )
+            session.commit()
+            return session.query(Order).filter(Order.id == str(order_id)).first()
+        finally:
+            session.close()

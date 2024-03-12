@@ -22,3 +22,6 @@ class OrderManager(GenericManager):
         self, order_ids: List[UUID]
     ) -> Optional[List[Dish]]:
         return self.dao.get_order_detail_by_order_id(order_ids)
+
+    def update_order_status(self, order_id: UUID, status: str) -> Optional[Order]:
+        return self.dao.update_order_status(order_id, status)

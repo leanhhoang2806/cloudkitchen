@@ -1,7 +1,7 @@
 from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.orders_manager import OrderManager
-from src.models.data_model import OrderCreate, OrderUpdate
+from src.models.data_model import OrderCreate, OrderStatusUpdate
 from src.models.postgres_model import OrderPydantic, DishPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
@@ -47,7 +47,6 @@ async def get_order_details(
 ):
     all_ids = order_ids.split(",")
     dishes = order_manager.get_order_detail_by_order_id(all_ids)
-    print(dishes)
     return [DishPydantic.from_orm(dish) for dish in dishes]
 
 
@@ -60,13 +59,13 @@ async def create_order(
     return OrderPydantic.from_orm(order)
 
 
-@router.put("/order/{order_id}", response_model=OrderPydantic)
-async def update_order(
+@router.put("/order/{order_id}/status", response_model=OrderPydantic)
+async def update_order_status(
     order_id: UUID,
-    order_data: OrderUpdate,
+    order_data: OrderStatusUpdate,
     token=Depends(validate_token),
 ):
-    order = order_manager.update(order_id, order_data)
+    order = order_manager.update_order_status(order_id, order_data.status)
     return OrderPydantic.from_orm(order)
 
 
