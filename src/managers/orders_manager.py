@@ -1,8 +1,8 @@
 from src.daos.Order_DAO import OrderDAO
 from src.managers.generic_manager import GenericManager
-from src.models.postgres_model import Order
+from src.models.postgres_model import Order, Dish
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 
 
 class OrderManager(GenericManager):
@@ -17,3 +17,6 @@ class OrderManager(GenericManager):
 
     def get_by_buyer_id(self, buyer_id: UUID) -> Optional[Order]:
         return self.dao.get_by_buyer_id(buyer_id)
+
+    def get_order_detail_by_order_id(self, order_id: UUID) -> Optional[List[Dish]]:
+        return self.dao.get_order_detail_by_order_id(order_id)

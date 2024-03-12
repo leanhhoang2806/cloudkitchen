@@ -2,7 +2,7 @@ from fastapi import Depends
 from src.validations.validators import validate_token
 from src.managers.orders_manager import OrderManager
 from src.models.data_model import OrderCreate, OrderUpdate
-from src.models.postgres_model import OrderPydantic
+from src.models.postgres_model import OrderPydantic, DishPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 from src.managers.Order_dish_manager import OrderDishManager
@@ -38,6 +38,16 @@ async def get_order(
 ):
     order = order_manager.get(order_id)
     return OrderPydantic.from_orm(order)
+
+
+@router.get("/order/details/{order_id}", response_model=Optional[List[DishPydantic]])
+async def get_order_details(
+    order_id: UUID,
+    token=Depends(validate_token),
+):
+    dishes = order_manager.get_order_detail_by_order_id(order_id)
+    print(dishes)
+    return [DishPydantic.from_orm(dish) for dish in dishes]
 
 
 @router.post("/order/", response_model=OrderPydantic)

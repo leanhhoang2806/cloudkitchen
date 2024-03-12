@@ -1,9 +1,9 @@
-from src.models.postgres_model import Order, OrdersDish
+from src.models.postgres_model import Order, OrdersDish, Dish
 from src.models.data_model import OrderCreate, OrderCreateWithBuyerId
 from src.daos.BaseDAO import GenericDAO
 from src.daos.database_session import session
 from uuid import UUID
-from typing import Optional
+from typing import Optional, List
 import logging
 
 
@@ -41,6 +41,17 @@ class OrderDAO(GenericDAO):
             return (
                 session.query(self.model)
                 .filter(self.model.buyer_id == str(buyer_id))
+                .all()
+            )
+        finally:
+            session.close()
+
+    def get_order_detail_by_order_id(self, order_id: UUID) -> Optional[List[Dish]]:
+        try:
+            return (
+                session.query(Dish)
+                .join(OrdersDish)
+                .filter(OrdersDish.order_id == str(order_id))
                 .all()
             )
         finally:

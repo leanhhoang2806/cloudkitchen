@@ -60,5 +60,15 @@ services:
       - flyway
       - localstack
 
+  schemaspy:
+    image: schemaspy/schemaspy
+    depends_on:
+      - postgres
+    command: ["-t", "pgsql", "-host", "postgres", "-db", "your_dbname", "-u", "your_user", "-p", "your_password"]
+    ports:
+      - "8080:8080"
+    networks:
+      - your_network
+
 networks:
   your_network:
