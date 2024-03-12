@@ -35,9 +35,9 @@ CREATE TABLE Dish (
     s3_path VARCHAR(255),
     seller_id UUID NOT NULL,
     is_featured BOOLEAN DEFAULT FALSE,
+    status VARCHAR(50) DEFAULT 'ACTIVE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(50) DEFAULT 'ACTIVE',
     FOREIGN KEY (seller_id) REFERENCES Seller_Info(id),
     PRIMARY KEY (id)
 );
@@ -45,6 +45,7 @@ CREATE TABLE Dish (
 CREATE TABLE Orders (
     id UUID DEFAULT uuid_generate_v4(),
     buyer_id UUID NOT NULL,
+    status VARCHAR(50) DEFAULT 'WAITING_FOR_SELLER_CONFIRM',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),

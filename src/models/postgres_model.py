@@ -54,9 +54,9 @@ class Dish(Base):
     s3_path = Column(String(255))
     seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
     is_featured = Column(Boolean, server_default=text("false"))
+    status = Column(String(50), server_default=text("'ACTIVE'::character varying"))
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    status = Column(String(50), server_default=text("'ACTIVE'::character varying"))
 
     seller = relationship("SellerInfo")
 
@@ -66,6 +66,10 @@ class Order(Base):
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
+    status = Column(
+        String(50),
+        server_default=text("'WAITING_FOR_SELLER_CONFIRM'::character varying"),
+    )
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
