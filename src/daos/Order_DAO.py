@@ -46,12 +46,16 @@ class OrderDAO(GenericDAO):
         finally:
             session.close()
 
-    def get_order_detail_by_order_id(self, order_id: UUID) -> Optional[List[Dish]]:
+    def get_order_detail_by_order_id(
+        self, order_ids: List[UUID]
+    ) -> Optional[List[Dish]]:
         try:
             return (
                 session.query(Dish)
                 .join(OrdersDish)
-                .filter(OrdersDish.order_id == str(order_id))
+                .filter(
+                    OrdersDish.order_id.in_([str(order_id) for order_id in order_ids])
+                )
                 .all()
             )
         finally:

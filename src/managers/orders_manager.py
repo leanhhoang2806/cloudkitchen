@@ -18,5 +18,7 @@ class OrderManager(GenericManager):
     def get_by_buyer_id(self, buyer_id: UUID) -> Optional[Order]:
         return self.dao.get_by_buyer_id(buyer_id)
 
-    def get_order_detail_by_order_id(self, order_id: UUID) -> Optional[List[Dish]]:
-        return self.dao.get_order_detail_by_order_id(order_id)
+    def get_order_detail_by_order_id(
+        self, order_ids: List[UUID]
+    ) -> Optional[List[Dish]]:
+        return self.dao.get_order_detail_by_order_id(order_ids)

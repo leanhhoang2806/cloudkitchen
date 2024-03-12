@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.orders_manager import OrderManager
 from src.models.data_model import OrderCreate, OrderUpdate
@@ -40,12 +40,13 @@ async def get_order(
     return OrderPydantic.from_orm(order)
 
 
-@router.get("/order/details/{order_id}", response_model=Optional[List[DishPydantic]])
+@router.get("/order/details/all", response_model=Optional[List[DishPydantic]])
 async def get_order_details(
-    order_id: UUID,
+    order_ids: str = Query(...),
     token=Depends(validate_token),
 ):
-    dishes = order_manager.get_order_detail_by_order_id(order_id)
+    all_ids = order_ids.split(",")
+    dishes = order_manager.get_order_detail_by_order_id(all_ids)
     print(dishes)
     return [DishPydantic.from_orm(dish) for dish in dishes]
 
