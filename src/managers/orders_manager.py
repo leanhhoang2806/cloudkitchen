@@ -4,20 +4,29 @@ from src.models.postgres_model import Order, Dish
 from uuid import UUID
 from typing import Optional, List
 from src.models.data_model import OrderCreate, SingleOrderCreate
+from src.managers.dish_manager import DishManager
+
+dish_manager = DishManager()
 
 
 class OrderManager(GenericManager):
     def __init__(self):
         super().__init__(OrderDAO())
 
-    def create(self, data: OrderCreate) -> List[Order]:
-        return [
-            self.dao.create(SingleOrderCreate(dish_id=dish_id, buyer_id=data.buyer_id))
-            for dish_id in data.dish_id
+    def create(self, order_create: OrderCreate) -> List[Order]:
+        seller_id_by_dish: List[Dish] = [
+            dish_manager.get(dish_id) for dish_id in order_create.dish_id
         ]
-
-    def get_by_seller_id(self, seller_id):
-        return self.dao.get_by_seller_id(seller_id)
+        return [
+            self.dao.create(
+                SingleOrderCreate(
+                    dish_id=order_create.dish_id[index],
+                    buyer_id=order_create.buyer_id,
+                    seller_id=seller_id_by_dish[index].seller_id,
+                ),
+            )
+            for index in range(len(order_create.dish_id))
+        ]
 
     def get_by_buyer_id(self, buyer_id: UUID) -> Optional[Order]:
         return self.dao.get_by_buyer_id(buyer_id)
@@ -32,3 +41,6 @@ class OrderManager(GenericManager):
 
     def get_dish_by_order_id(self, order_id: UUID) -> Optional[List[Dish]]:
         return self.dao.get_dish_by_order_id(order_id)
+
+    def get_by_seller_id(self, seller_id: UUID) -> Optional[Order]:
+        return self.dao.get_by_seller_id(seller_id)

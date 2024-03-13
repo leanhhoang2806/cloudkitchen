@@ -46,6 +46,7 @@ CREATE TABLE Orders (
     id UUID DEFAULT uuid_generate_v4(),
     buyer_id UUID NOT NULL,
     dish_id UUID NOT NULL,
+    seller_id UUID NOT NULL,
     status VARCHAR(50) DEFAULT 'WAITING_FOR_SELLER_CONFIRM',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

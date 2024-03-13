@@ -67,6 +67,7 @@ class Order(Base):
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
     dish_id = Column(ForeignKey("dish.id"), nullable=False)
+    seller_id = Column(UUID, nullable=False)
     status = Column(
         String(50),
         server_default=text("'WAITING_FOR_SELLER_CONFIRM'::character varying"),

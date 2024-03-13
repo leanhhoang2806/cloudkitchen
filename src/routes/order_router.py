@@ -20,6 +20,15 @@ async def get_order_by_buyer_id(
     return [OrderPydantic.from_orm(order) for order in orders]
 
 
+@router.get("/order/seller/{seller_id}", response_model=Optional[List[OrderPydantic]])
+async def get_order_by_seller_id(
+    seller_id: UUID,
+    token=Depends(validate_token),
+):
+    orders = order_manager.get_by_seller_id(seller_id)
+    return [OrderPydantic.from_orm(order) for order in orders]
+
+
 @router.get("/order/{order_id}", response_model=OrderPydantic)
 async def get_order(
     order_id: UUID,
