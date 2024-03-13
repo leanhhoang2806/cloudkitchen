@@ -1,25 +1,14 @@
-from fastapi import Depends, Query
+from fastapi import Depends
 from src.validations.validators import validate_token
 from src.managers.orders_manager import OrderManager
 from src.models.data_model import OrderCreate, OrderStatusUpdate
 from src.models.postgres_model import OrderPydantic, DishPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
-from src.managers.Order_dish_manager import OrderDishManager
 from typing import Optional, List
 
 router = CustomAPIRouter()
 order_manager = OrderManager()
-order_dish_manager = OrderDishManager()
-
-
-@router.get("/order/seller/{seller_id}", response_model=Optional[List[OrderPydantic]])
-async def get_order_by_seller_id(
-    seller_id: UUID,
-    token=Depends(validate_token),
-):
-    orders = order_dish_manager.get_order_for_seller(seller_id)
-    return [OrderPydantic.from_orm(order) for order in orders]
 
 
 @router.get("/order/buyer/{buyer_id}", response_model=Optional[List[OrderPydantic]])
@@ -40,23 +29,22 @@ async def get_order(
     return OrderPydantic.from_orm(order)
 
 
-@router.get("/order/details/all", response_model=Optional[List[DishPydantic]])
-async def get_order_details(
-    order_ids: str = Query(...),
+@router.get("/order/{order_id}/dish", response_model=Optional[List[DishPydantic]])
+async def get_dish_by_order_id(
+    order_id: UUID,
     token=Depends(validate_token),
 ):
-    all_ids = order_ids.split(",")
-    dishes = order_manager.get_order_detail_by_order_id(all_ids)
+    dishes = order_manager.get_dish_by_order_id(order_id)
     return [DishPydantic.from_orm(dish) for dish in dishes]
 
 
-@router.post("/order/", response_model=OrderPydantic)
+@router.post("/order/", response_model=List[OrderPydantic])
 async def create_order(
     order_data: OrderCreate,
     token=Depends(validate_token),
 ):
-    order = order_manager.create(order_data)
-    return OrderPydantic.from_orm(order)
+    orders = order_manager.create(order_data)
+    return [OrderPydantic.from_orm(order) for order in orders]
 
 
 @router.put("/order/{order_id}/status", response_model=OrderPydantic)

@@ -45,20 +45,11 @@ CREATE TABLE Dish (
 CREATE TABLE Orders (
     id UUID DEFAULT uuid_generate_v4(),
     buyer_id UUID NOT NULL,
+    dish_id UUID NOT NULL,
     status VARCHAR(50) DEFAULT 'WAITING_FOR_SELLER_CONFIRM',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE Orders_Dish(
-    id UUID DEFAULT uuid_generate_v4(),
-    order_id UUID NOT NULL,
-    dish_id UUID NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES Orders(id),
     FOREIGN KEY (dish_id) REFERENCES Dish(id),
     PRIMARY KEY (id)
 );

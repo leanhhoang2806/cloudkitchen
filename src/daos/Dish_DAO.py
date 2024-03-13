@@ -15,7 +15,11 @@ class DishDAO(GenericDAO):
     def get_by_seller_id(self, seller_id):
         try:
             return (
-                session.query(Dish).filter(and_(Dish.seller_id == str(seller_id), Dish.status == Status.ACTIVE)).all()
+                session.query(Dish)
+                .filter(
+                    and_(Dish.seller_id == str(seller_id), Dish.status == Status.ACTIVE)
+                )
+                .all()
             )
         finally:
             session.close()

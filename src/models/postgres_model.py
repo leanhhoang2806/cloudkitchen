@@ -66,6 +66,7 @@ class Order(Base):
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
+    dish_id = Column(ForeignKey("dish.id"), nullable=False)
     status = Column(
         String(50),
         server_default=text("'WAITING_FOR_SELLER_CONFIRM'::character varying"),
@@ -74,6 +75,7 @@ class Order(Base):
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
     buyer = relationship("BuyerInfo")
+    dish = relationship("Dish")
 
 
 class Purchase(Base):
@@ -113,19 +115,6 @@ class Payment(Base):
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
     seller = relationship("SellerInfo")
-
-
-class OrdersDish(Base):
-    __tablename__ = "orders_dish"
-
-    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
-    order_id = Column(ForeignKey("orders.id"), nullable=False)
-    dish_id = Column(ForeignKey("dish.id"), nullable=False)
-    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
-
-    dish = relationship("Dish")
-    order = relationship("Order")
 
 
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)

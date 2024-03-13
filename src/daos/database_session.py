@@ -7,7 +7,7 @@ class Database:
     def __init__(self, db_url):
         self.engine = create_engine(db_url)
         self.SessionLocal = sessionmaker(
-            autocommit=False, autoflush=False, bind=self.engine
+            autocommit=False, autoflush=False, bind=self.engine, expire_on_commit=False
         )
 
     def get_session(self) -> Session:

@@ -53,6 +53,11 @@ class OrderCreate(BaseModel):
     dish_id: List[UUID]
 
 
+class SingleOrderCreate(BaseModel):
+    buyer_id: UUID
+    dish_id: UUID
+
+
 class OrderCreateWithBuyerId(BaseModel):
     buyer_id: UUID
 
