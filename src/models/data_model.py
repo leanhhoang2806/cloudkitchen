@@ -126,3 +126,13 @@ class StripeClientSecret(BaseModel):
 
 class StripePaymentInfo(BaseModel):
     dish_ids: List[UUID]
+
+
+class DiscountedDishCreate(BaseModel):
+    dish_id: UUID
+    discounted_percentage: int
+
+
+class DiscountedDishUpdate(BaseModel):
+    id: UUID
+    discounted_percentage: int

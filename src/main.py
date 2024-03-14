@@ -11,6 +11,7 @@ from src.routes import (
     search_router,
     payment_router,
     stripe_payment_router,
+    discounted_dish_router,
 )
 
 app = FastAPI()
@@ -38,3 +39,4 @@ app.include_router(featured_dish_router.router, prefix="/api/v1")
 app.include_router(search_router.router, prefix="/api/v1")
 app.include_router(payment_router.router, prefix="/api/v1")
 app.include_router(stripe_payment_router.router, prefix="/api/v1")
+app.include_router(discounted_dish_router.router, prefix="/api/v1")

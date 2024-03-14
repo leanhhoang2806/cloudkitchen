@@ -91,3 +91,14 @@ CREATE TABLE Featured_dish (
     FOREIGN KEY (dish_id) REFERENCES Dish(id),
     PRIMARY KEY (id)
 );
+
+CREATE TABLE Discounted_Dish (
+    id UUID DEFAULT uuid_generate_v4(),
+    dish_id UUID NOT NULL,
+    discounted_percentage INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (dish_id) REFERENCES Dish(id),
+    PRIMARY KEY (id)
+);

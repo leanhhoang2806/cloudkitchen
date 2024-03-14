@@ -118,9 +118,22 @@ class Payment(Base):
     seller = relationship("SellerInfo")
 
 
+class DiscountedDish(Base):
+    __tablename__ = "discounted_dish"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    dish_id = Column(ForeignKey("dish.id"), nullable=False)
+    discounted_percentage = Column(Integer, nullable=False)
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+    dish = relationship("Dish")
+
+
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
 DishPydantic = sqlalchemy_to_pydantic(Dish)
 BuyerPydantic = sqlalchemy_to_pydantic(BuyerInfo)
 OrderPydantic = sqlalchemy_to_pydantic(Order)
 FeatureDishPydantic = sqlalchemy_to_pydantic(FeaturedDish)
 PaymentPydantic = sqlalchemy_to_pydantic(Payment)
+DiscountedDishPydantic = sqlalchemy_to_pydantic(DiscountedDish)
