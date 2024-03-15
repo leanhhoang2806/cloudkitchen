@@ -35,3 +35,23 @@ class GenericTryError(Exception):
     def __init__(self, message="Generic error on Try") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class ValidateSellerSubsciprtionError(Exception):
+    def __init__(self, message="Validate seller subscription Error") -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
+class MultipleSellerSubscriptionDetected(Exception):
+    def __init__(
+        self, message="Multiple Seller Subsciption for the given email"
+    ) -> None:
+        self.message = message
+        super().__init__(self.message)
+
+
+class SellerSubscriptionNotActive(Exception):
+    def __init__(self, message="Seller subscription is not active") -> None:
+        self.message = message
+        super().__init__(self.message)

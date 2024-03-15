@@ -6,6 +6,9 @@ from uuid import uuid4
 from botocore.exceptions import ClientError
 from src.managers.payment_manager import PaymentManager
 from src.managers.dish_manager import DishManager
+from src.managers.stripe_manager import StripeManager
+from src.managers.seller_manager import SellerInfoManager
+from src.models.data_model import PaymentUpdate
 from uuid import UUID
 from src.errors.custom_exceptions import MediaUploadLimitException
 import logging
@@ -14,6 +17,11 @@ from src.managers.configuration_manager import CONFIG
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+stripe_manager = StripeManager()
+payment_manager = PaymentManager()
+seller_info_manager = SellerInfoManager()
 
 
 class S3Uploader:
@@ -65,6 +73,16 @@ class S3Uploader:
     def _is_allowed_to_upload(self, seller_id: UUID) -> bool:
         payment_info = self.payment_manager.get_by_seller_id(seller_id)
         dishes_owned_by_seller = self.dish_manager.get_by_seller_id(seller_id)
+        if len(dishes_owned_by_seller) > payment_info.picture_upload_limit:
+            if stripe_manager.is_seller_subsciption_active:
+                seller_info = seller_info_manager.get(seller_id)
+                payment_manager.payment_update_by_email(
+                    PaymentUpdate(
+                        email=seller_info.email,
+                        picture_upload_limit=10,
+                        dishes_to_feature_limit=5,
+                    )
+                )
         return payment_info.picture_upload_limit > len(dishes_owned_by_seller)
 
 

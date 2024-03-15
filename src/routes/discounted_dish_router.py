@@ -16,10 +16,7 @@ discounted_dish_manager = DiscountedDishManager()
     "/discounted-dish/dish/{dish_id}",
     response_model=Optional[DiscountedDishPydantic],
 )
-async def get_discounted_dish_by_dish_id(
-    dish_id: UUID,
-    token=Depends(validate_token),
-):
+async def get_discounted_dish_by_dish_id(dish_id: UUID):
     discounted_dish = discounted_dish_manager.get_discounted_dish_by_dish_id(dish_id)
     return (
         DiscountedDishPydantic.from_orm(discounted_dish)

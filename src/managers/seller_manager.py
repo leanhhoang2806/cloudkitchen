@@ -21,8 +21,8 @@ class SellerInfoManager(GenericManager):
         seller = self.create(seller_info_data)
         paymentCreate = PaymentCreate(
             email=seller_info_data.email,
-            picture_upload_limit=3,
-            dishes_to_feature_limit=3,
+            picture_upload_limit=1,
+            dishes_to_feature_limit=1,
             seller_id=seller.id,
         )
         self.payment_manager.create(paymentCreate)

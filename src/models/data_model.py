@@ -128,6 +128,10 @@ class StripePaymentInfo(BaseModel):
     dish_ids: List[UUID]
 
 
+class StripeSubscriptionStatus(BaseModel):
+    active_status: bool
+
+
 class DiscountedDishCreate(BaseModel):
     dish_id: UUID
     discounted_percentage: int
@@ -136,3 +140,7 @@ class DiscountedDishCreate(BaseModel):
 class DiscountedDishUpdate(BaseModel):
     id: UUID
     discounted_percentage: int
+
+
+class EmailOnlyPayload(BaseModel):
+    email: str
