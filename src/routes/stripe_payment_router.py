@@ -10,6 +10,7 @@ from src.models.data_model import (
     EmailOnlyPayload,
 )
 from src.errors.custom_exceptions import SellerSubscriptionNotActive
+from src.models.data_model import StripeSubscriptionStatus
 
 router = CustomAPIRouter()
 stripe_manager = StripeManager()
@@ -40,3 +41,11 @@ async def upddate_payment(
     )
 
     return status.HTTP_202_ACCEPTED
+
+
+@router.get("/stripe-payment/", response_model=StripeSubscriptionStatus)
+async def get_subscription_status(
+    email: EmailOnlyPayload, token=Depends(validate_token)
+):
+    status = stripe_manager.is_seller_subsciption_active(email.email)
+    return StripeSubscriptionStatus(active_status=status)

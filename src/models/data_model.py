@@ -144,3 +144,9 @@ class DiscountedDishUpdate(BaseModel):
 
 class EmailOnlyPayload(BaseModel):
     email: str
+
+
+class GenericResponsePayload(StripeSubscriptionStatus):
+    # combined order classes if needed
+
+    pass
