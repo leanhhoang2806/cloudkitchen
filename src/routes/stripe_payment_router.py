@@ -1,4 +1,5 @@
-from fastapi import Depends, status
+from fastapi import Depends, status, Request
+from fastapi.responses import JSONResponse
 from src.validations.validators import validate_token
 from src.routes.custom_api_router import CustomAPIRouter
 from src.managers.payment_manager import PaymentManager
@@ -11,7 +12,11 @@ from src.models.data_model import (
 )
 from src.errors.custom_exceptions import SellerSubscriptionNotActive
 from src.models.data_model import StripeSubscriptionStatus
+import stripe
+from src.managers.configuration_manager import CONFIG
+import json
 
+stripe.api_key = CONFIG.STRIPE_API_KEY
 router = CustomAPIRouter()
 stripe_manager = StripeManager()
 payment_manager = PaymentManager()
@@ -49,3 +54,29 @@ async def get_subscription_status(
 ):
     status = stripe_manager.is_seller_subsciption_active(email.email)
     return StripeSubscriptionStatus(active_status=status)
+
+
+@router.post("/stripe-payment/webhook")
+async def stripe_webhook(request: Request):
+    payload = await request.body()
+    event = None
+
+    try:
+        event = stripe.Event.construct_from(json.loads(payload), stripe.api_key)
+    except ValueError:
+        return status.HTTP_400_BAD_REQUEST
+
+    if event["type"] == "customer.subscription.deleted":
+
+        # change update user limit to 3
+        subscription = event["data"]["object"]
+        customer_id = subscription["customer"]
+        stripe_manager.on_subsciprtion_cancel(customer_id)
+
+        return JSONResponse(
+            status_code=200, content={"message": "Subscription cancellation received"}
+        )
+
+    # Handle other event types if needed
+
+    return JSONResponse(status_code=200)

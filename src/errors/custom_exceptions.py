@@ -55,3 +55,9 @@ class SellerSubscriptionNotActive(Exception):
     def __init__(self, message="Seller subscription is not active") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class ReduceLimitOnSubscriptionCancelledError(Exception):
+    def __init__(self, message="ReduceLimitOnSubscriptionCancelledError") -> None:
+        self.message = message
+        super().__init__(self.message)
