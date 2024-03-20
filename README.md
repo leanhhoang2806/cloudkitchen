@@ -1,4 +1,4 @@
-black . && docker-compose down -v && docker-compose up -d --build
+black . && docker-compose down -v && docker volume prune -f  && docker-compose up -d --build
 
 # Auto generate data model
 sqlacodegen postgresql://your_user:your_password@localhost:5432/your_dbname

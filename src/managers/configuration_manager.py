@@ -11,6 +11,7 @@ class ConfigurationManager:
             AWS_ACCESS_KEY_ID=os.environ.get("AWS_ACCESS_KEY_ID"),
             AWS_SECRET_ACCESS_KEY=os.environ.get("AWS_SECRET_ACCESS_KEY"),
             STRIPE_API_KEY=os.environ.get("STRIPE_API_KEY"),
+            MONGO_CONNECTION_STRING=os.environ.get("MONGO_CONNECTION_STRING"),
         )
 
     def get_configuration(self) -> Configuration:

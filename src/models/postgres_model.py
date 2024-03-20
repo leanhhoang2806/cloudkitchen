@@ -118,6 +118,20 @@ class Payment(Base):
     seller = relationship("SellerInfo")
 
 
+class ChatInfo(Base):
+    __tablename__ = "chat_info"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    seller_id = Column(ForeignKey("seller_info.id"), nullable=False)
+    buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
+    conversation_id = Column(String(24), nullable=False)
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+    buyer = relationship("BuyerInfo")
+    seller = relationship("SellerInfo")
+
+
 class DiscountedDish(Base):
     __tablename__ = "discounted_dish"
 

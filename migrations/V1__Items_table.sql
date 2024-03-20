@@ -102,3 +102,17 @@ CREATE TABLE Discounted_Dish (
     FOREIGN KEY (dish_id) REFERENCES Dish(id),
     PRIMARY KEY (id)
 );
+
+CREATE TABLE Chat_Info(
+    id UUID DEFAULT uuid_generate_v4(),
+    seller_id UUID NOT NULL,
+    buyer_id UUID NOT NULL,
+    conversation_id VARCHAR(24)  NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (seller_id) REFERENCES Seller_Info(id),
+    FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
+    PRIMARY KEY (id)
+
+)

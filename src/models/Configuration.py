@@ -8,3 +8,4 @@ class Configuration(BaseModel):
     AWS_ACCESS_KEY_ID: str
     AWS_SECRET_ACCESS_KEY: str
     STRIPE_API_KEY: str
+    MONGO_CONNECTION_STRING: str

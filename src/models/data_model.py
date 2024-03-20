@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from uuid import UUID
+from datetime import datetime
 
 
 class BuyerInfoCreate(BaseModel):
@@ -144,6 +145,29 @@ class DiscountedDishUpdate(BaseModel):
 
 class EmailOnlyPayload(BaseModel):
     email: str
+
+
+class ChatMessage(BaseModel):
+    sender: str
+    receiver: str
+    content: str
+    created_at: datetime
+
+
+class ChatRoomCreate(BaseModel):
+    seller_id: UUID
+    buyer_id: UUID
+    messages: List[ChatMessage] = []
+
+
+class ChatRoom(ChatRoomCreate):
+    mongo_chat_room_id: str
+
+
+class ChatInfoCreate(BaseModel):
+    seller_id: UUID
+    buyer_id: UUID
+    conversation_id: str
 
 
 class GenericResponsePayload(StripeSubscriptionStatus):
