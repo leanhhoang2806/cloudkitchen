@@ -12,20 +12,19 @@ class ChatDAO:
     def insert_chat(self, conversation_id: str, new_message: ChatMessage) -> None:
         conversations_collection = MONGO_DB[COLLECTION_NAME]
         try:
-            update_query = {"_id": conversation_id}
+            update_query = {"_id": ObjectId(conversation_id)}
 
             update_statement = {"$push": {"messages": new_message.dict()}}
 
             conversations_collection.update_one(update_query, update_statement)
-
-            inserted_doc = conversations_collection.find_one({"_id": conversation_id})
-            return ChatRoom(**inserted_doc)
+            return
         except Exception as e:
             raise e
 
     def get_conversation_by_id(self, conversation_id: str) -> Optional[ChatRoom]:
+
+        conversations_collection = MONGO_DB[COLLECTION_NAME]
         try:
-            conversations_collection = MONGO_DB[COLLECTION_NAME]
             query = {"_id": ObjectId(conversation_id)}
 
             return conversations_collection.find_one(query)
@@ -33,8 +32,9 @@ class ChatDAO:
             raise e
 
     def create_chat_room(self, chat_room_create: ChatRoomCreate) -> ChatRoom:
+
+        conversations_collection = MONGO_DB[COLLECTION_NAME]
         try:
-            conversations_collection = MONGO_DB[COLLECTION_NAME]
             chat_room_dict = self._convert_uuids_to_strings(chat_room_create.dict())
 
             result = conversations_collection.insert_one(chat_room_dict)

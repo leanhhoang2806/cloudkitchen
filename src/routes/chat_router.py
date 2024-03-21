@@ -1,9 +1,11 @@
-from fastapi import Depends
+from fastapi import Depends, Path
 from src.validations.validators import validate_token
 from src.routes.custom_api_router import CustomAPIRouter
-from src.models.data_model import ChatRoomCreate, ChatRoom, ChatMessage, ChatInfoCreate
+from src.models.data_model import ChatRoomCreate, ChatMessage, ChatInfoCreate
+from src.models.postgres_model import ChatInfoPydantic
 from src.managers.chat_manager import ChatManager
 from src.managers.chat_info_sql_manager import ChatInfoSQLManager
+from typing import Optional, List
 
 from uuid import UUID
 
@@ -28,21 +30,37 @@ async def create_chat_room(
     return result
 
 
-@router.get("/chat/{chat_id}", response_model=ChatRoom)
+@router.get("/chat/{conversation_id}", response_model=ChatRoomCreate)
 async def get_chat_room_by_id(
-    chat_id: UUID,
+    conversation_id: str,
     token=Depends(validate_token),
 ):
-    return chat_manager.get_conversation_by_id(chat_id)
+    return chat_manager.get_conversation_by_id(conversation_id)
 
 
-@router.post(
-    "/chat/{chat_id}",
-    response_model=ChatRoom,
-)
+@router.get("/chat/buyer/{buyer_id}", response_model=Optional[List[ChatInfoPydantic]])
+async def get_chat_room_by_buyer_id(
+    buyer_id: UUID,
+    token=Depends(validate_token),
+):
+
+    chat_info = chat_info_SQL_manager.get_chat_room_by_buyer_id(buyer_id)
+    return [ChatInfoPydantic.from_orm(chat) for chat in chat_info]
+
+
+@router.get("/chat/seller/{seller_id}", response_model=Optional[List[ChatInfoPydantic]])
+async def get_chat_room_by_seller_id(
+    seller_id: UUID,
+    token=Depends(validate_token),
+):
+    chat_info = chat_info_SQL_manager.get_chat_room_by_buyer_id(seller_id)
+    return [ChatInfoPydantic.from_orm(chat) for chat in chat_info]
+
+
+@router.post("/chat/{chat_id}")
 async def post_message(
-    chat_id: UUID,
     payload: ChatMessage,
+    chat_id: str = Path(...),
     token=Depends(validate_token),
 ):
-    return chat_manager.insert_chat(str(chat_id), payload)
+    return chat_manager.insert_chat(chat_id, payload)

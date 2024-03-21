@@ -151,7 +151,7 @@ class ChatMessage(BaseModel):
     sender: str
     receiver: str
     content: str
-    created_at: datetime
+    created_at: datetime = datetime.now()
 
 
 class ChatRoomCreate(BaseModel):
