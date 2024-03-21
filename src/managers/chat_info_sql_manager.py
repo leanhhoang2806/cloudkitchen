@@ -13,4 +13,4 @@ class ChatInfoSQLManager(GenericManager):
         return self.dao.get_chat_room_by_buyer_id(buyer_id)
 
     def get_chat_room_by_seller_id(self, seller_id: UUID) -> Optional[List[ChatInfo]]:
-        return self.dao.get_chat_room_by_buyer_id(seller_id)
+        return self.dao.get_chat_room_by_seller_id(seller_id)

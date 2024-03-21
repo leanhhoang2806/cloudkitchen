@@ -53,7 +53,7 @@ async def get_chat_room_by_seller_id(
     seller_id: UUID,
     token=Depends(validate_token),
 ):
-    chat_info = chat_info_SQL_manager.get_chat_room_by_buyer_id(seller_id)
+    chat_info = chat_info_SQL_manager.get_chat_room_by_seller_id(seller_id)
     return [ChatInfoPydantic.from_orm(chat) for chat in chat_info]
 
 
