@@ -37,6 +37,21 @@ class ChatDAO:
         try:
             chat_room_dict = self._convert_uuids_to_strings(chat_room_create.dict())
 
+            existing_doc = conversations_collection.find_one(
+                {
+                    "seller_id": chat_room_dict["seller_id"],
+                    "buyer_id": chat_room_dict["buyer_id"],
+                }
+            )
+
+            if existing_doc:
+                # Document already exists, return the existing chat room
+                chat_room = ChatRoom(
+                    mongo_chat_room_id=str(existing_doc["_id"]),
+                    seller_id=UUID4(existing_doc["seller_id"]),
+                    buyer_id=UUID4(existing_doc["buyer_id"]),
+                )
+                return chat_room
             result = conversations_collection.insert_one(chat_room_dict)
             inserted_doc = conversations_collection.find_one(
                 {"_id": result.inserted_id}

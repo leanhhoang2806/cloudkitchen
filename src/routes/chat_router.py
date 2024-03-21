@@ -20,7 +20,7 @@ async def create_chat_room(
     token=Depends(validate_token),
 ):
     result = chat_manager.create_chat_room(payload)
-    chat_info_SQL_manager.create(
+    chat_info_SQL_manager.create_if_not_exists(
         ChatInfoCreate(
             seller_id=payload.seller_id,
             buyer_id=payload.buyer_id,
