@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PositiveInt
 from typing import Optional, List
 from uuid import UUID
 from datetime import datetime
@@ -174,3 +174,10 @@ class GenericResponsePayload(StripeSubscriptionStatus):
     # combined order classes if needed
 
     pass
+
+
+class DishReviewCreate(BaseModel):
+    dish_id: UUID
+    buyer_id: UUID
+    content: str
+    rating: PositiveInt

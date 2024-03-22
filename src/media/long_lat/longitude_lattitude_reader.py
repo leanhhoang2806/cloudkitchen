@@ -42,6 +42,7 @@ class ZipcodeSearchReader:
             target_lon = target_row["LNG"].values[0]
 
         if target_lat is None or target_lon is None:
+            # change this to logging
             print("Target zip code not found in the dataset")
             return
 

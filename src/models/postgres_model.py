@@ -144,6 +144,21 @@ class DiscountedDish(Base):
     dish = relationship("Dish")
 
 
+class DishReview(Base):
+    __tablename__ = "dish_review"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    dish_id = Column(ForeignKey("dish.id"), nullable=False)
+    buyer_id = Column(ForeignKey("buyer_info.id"), nullable=False)
+    content = Column(String(255), nullable=False)
+    rating = Column(Integer, nullable=False)
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+    buyer = relationship("BuyerInfo")
+    dish = relationship("Dish")
+
+
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
 DishPydantic = sqlalchemy_to_pydantic(Dish)
 BuyerPydantic = sqlalchemy_to_pydantic(BuyerInfo)
@@ -152,3 +167,4 @@ FeatureDishPydantic = sqlalchemy_to_pydantic(FeaturedDish)
 PaymentPydantic = sqlalchemy_to_pydantic(Payment)
 DiscountedDishPydantic = sqlalchemy_to_pydantic(DiscountedDish)
 ChatInfoPydantic = sqlalchemy_to_pydantic(ChatInfo)
+DishReviewPydantic = sqlalchemy_to_pydantic(DishReview)

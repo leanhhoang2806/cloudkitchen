@@ -115,4 +115,18 @@ CREATE TABLE Chat_Info(
     FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
     PRIMARY KEY (id)
 
-)
+);
+
+CREATE TABLE Dish_Review(
+    id UUID DEFAULT uuid_generate_v4(),
+    dish_id UUID NOT NULL,
+    buyer_id UUID NOT NULL,
+    content VARCHAR(255)  NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (dish_id) REFERENCES Dish(id),
+    FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
+    PRIMARY KEY (id)
+);
