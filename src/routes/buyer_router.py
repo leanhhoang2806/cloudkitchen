@@ -20,6 +20,12 @@ async def get_buyer_by_email(
     return BuyerPydantic.from_orm(buyer)
 
 
+@router.get("/buyer/no-validation/{buyer_id}")
+async def get_buyer_name_by_id_no_validation(buyer_id: UUID):
+    buyer = buyer_manager.get(buyer_id)
+    return {"name": buyer.email}
+
+
 @router.get("/buyer/{buyer_id}", response_model=BuyerPydantic)
 async def get_buyer(
     buyer_id: UUID,

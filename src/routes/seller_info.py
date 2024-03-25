@@ -11,6 +11,14 @@ router = CustomAPIRouter()
 seller_info_manager = SellerInfoManager()
 
 
+@router.get("/seller_info/name-only/{dish_id}")
+async def get_seller_name_no_auth_validation(
+    dish_id: UUID,
+):
+    seller_info = seller_info_manager.get_seller_name_by_dish_id(dish_id)
+    return {"name": seller_info.name} if seller_info else None
+
+
 @router.get("/seller_info/", response_model=Optional[SellerInfoPydantic])
 async def get_seller_by_email(
     email: str = Query(...),

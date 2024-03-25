@@ -14,4 +14,4 @@ class DishReviewManager(GenericManager):
 
     def get_dish_review_rating_summary(self, dish_id: UUID) -> Optional[float]:
         rating = self.dao.get_dish_review_rating_summary(dish_id)
-        return round(rating, 1)
+        return round(rating, 1) if rating else 0

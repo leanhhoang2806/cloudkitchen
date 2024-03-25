@@ -5,6 +5,7 @@ from src.models.postgres_model import SellerInfo
 from src.models.data_model import SellerInfoCreate
 from src.managers.payment_manager import PaymentManager
 from src.models.data_model import PaymentCreate
+from uuid import UUID
 
 
 class SellerInfoManager(GenericManager):
@@ -27,3 +28,6 @@ class SellerInfoManager(GenericManager):
         )
         self.payment_manager.create(paymentCreate)
         return seller
+
+    def get_seller_name_by_dish_id(self, dish_id: UUID) -> Optional[SellerInfo]:
+        return self.dao.get_seller_name_by_dish_id(dish_id)
