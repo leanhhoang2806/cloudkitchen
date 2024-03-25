@@ -15,3 +15,8 @@ class DishReviewManager(GenericManager):
     def get_dish_review_rating_summary(self, dish_id: UUID) -> Optional[float]:
         rating = self.dao.get_dish_review_rating_summary(dish_id)
         return round(rating, 1) if rating else 0
+
+    def get_dish_review_by_dish_id_and_buyer_id(
+        self, dish_id: UUID, buyer_id: UUID
+    ) -> Optional[DishReview]:
+        return self.dao.get_dish_review_by_dish_id_and_buyer_id(dish_id, buyer_id)

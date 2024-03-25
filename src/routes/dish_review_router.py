@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Depends, Response, status
 from src.validations.validators import validate_token
 from src.managers.Dish_Review_manager import DishReviewManager
 from src.models.data_model import DishReviewCreate
@@ -28,6 +28,23 @@ async def get_dish_review(dish_review_id: UUID, token=Depends(validate_token)):
 async def delete_dish_review(dish_review_id: UUID, token=Depends(validate_token)):
     deleted_count = dish_review_manager.delete(dish_review_id)
     return {"deleted_count": deleted_count}
+
+
+@router.get(
+    "/dish-review/dish/{dish_id}/buyer/{buyer_id}",
+    response_model=Optional[DishReviewPydantic],
+)
+async def get_dish_review_by_dish_id_and_buyer_id(
+    dish_id: UUID, buyer_id: UUID, token=Depends(validate_token)
+):
+    review = dish_review_manager.get_dish_review_by_dish_id_and_buyer_id(
+        dish_id, buyer_id
+    )
+    return (
+        DishReviewPydantic.from_orm(review)
+        if review
+        else Response(status_code=status.HTTP_204_NO_CONTENT)
+    )
 
 
 @router.get(

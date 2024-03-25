@@ -7,18 +7,25 @@ from uuid import UUID
 from sqlalchemy import func, desc, and_
 
 
-
 class DishReviewDAO(GenericDAO):
     def __init__(self):
         super().__init__(DishReview)
 
-    def create_if_not_exists(self, dish_review_create: DishReview) -> None:
+    def create_if_not_exists(self, dish_review_create: DishReviewCreate) -> None:
         try:
             existing_instance = (
-                session.query(DishReview).filter(and_(DishReview.buyer_id == dish_review_create.buyer_id, DishReview.dish_id == dish_review_create.dish_id)).first()
+                session.query(DishReview)
+                .filter(
+                    and_(
+                        DishReview.buyer_id == dish_review_create.buyer_id,
+                        DishReview.dish_id == dish_review_create.dish_id,
+                    )
+                )
+                .first()
             )
 
-            if existing_instance: return existing_instance
+            if existing_instance:
+                return existing_instance
             data_dict = self._convert_uuids_to_strings(dish_review_create.dict())
             instance = DishReview(**data_dict)
             session.add(instance)
@@ -45,6 +52,23 @@ class DishReviewDAO(GenericDAO):
                 session.query(func.avg(DishReview.rating))
                 .filter(DishReview.dish_id == str(dish_id))
                 .scalar()
+            )
+        finally:
+            session.close()
+
+    def get_dish_review_by_dish_id_and_buyer_id(
+        self, dish_id: UUID, buyer_id: UUID
+    ) -> Optional[DishReview]:
+        try:
+            return (
+                session.query(DishReview)
+                .filter(
+                    and_(
+                        DishReview.buyer_id == str(buyer_id),
+                        DishReview.dish_id == str(dish_id),
+                    )
+                )
+                .first()
             )
         finally:
             session.close()
