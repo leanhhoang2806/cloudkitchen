@@ -3,7 +3,7 @@ from src.daos.BaseDAO import GenericDAO
 from src.daos.database_session import session
 from typing import List, Optional
 from uuid import UUID
-from sqlalchemy import func
+from sqlalchemy import func, desc
 
 
 class DishReviewDAO(GenericDAO):
@@ -15,6 +15,7 @@ class DishReviewDAO(GenericDAO):
             return (
                 session.query(DishReview)
                 .filter(DishReview.dish_id == str(dish_id))
+                .order_by(desc(DishReview.created_at)) 
                 .all()
             )
         finally:
