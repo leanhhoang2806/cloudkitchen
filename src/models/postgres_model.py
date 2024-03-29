@@ -10,7 +10,7 @@ from sqlalchemy import (
     text,
     Boolean,
 )
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -159,6 +159,16 @@ class DishReview(Base):
     dish = relationship("Dish")
 
 
+class Permission(Base):
+    __tablename__ = "permission"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    user_email = Column(String(100), nullable=False, unique=True)
+    permissions = Column(JSONB(astext_type=Text()))
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
 DishPydantic = sqlalchemy_to_pydantic(Dish)
 BuyerPydantic = sqlalchemy_to_pydantic(BuyerInfo)
@@ -168,3 +178,4 @@ PaymentPydantic = sqlalchemy_to_pydantic(Payment)
 DiscountedDishPydantic = sqlalchemy_to_pydantic(DiscountedDish)
 ChatInfoPydantic = sqlalchemy_to_pydantic(ChatInfo)
 DishReviewPydantic = sqlalchemy_to_pydantic(DishReview)
+PermissionPydantic = sqlalchemy_to_pydantic(Permission)

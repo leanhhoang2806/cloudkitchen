@@ -1,7 +1,7 @@
 from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.buyer_manager import BuyerManager
-from src.models.data_model import BuyerInfoCreate, BuyerInfoUpdate
+from src.models.data_model import BuyerInfoUpdate  # , BuyerInfoCreate
 from src.models.postgres_model import BuyerPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
@@ -35,13 +35,13 @@ async def get_buyer(
     return BuyerPydantic.from_orm(buyer)
 
 
-@router.post("/buyer/", response_model=BuyerPydantic)
-async def create_buyer(
-    buyer_data: BuyerInfoCreate,
-    token=Depends(validate_token),
-):
-    buyer = buyer_manager.create(buyer_data)
-    return BuyerPydantic.from_orm(buyer)
+# @router.post("/buyer/", response_model=BuyerPydantic)
+# async def create_buyer(
+#     buyer_data: BuyerInfoCreate,
+#     token=Depends(validate_token),
+# ):
+#     buyer = buyer_manager.create(buyer_data)
+#     return BuyerPydantic.from_orm(buyer)
 
 
 @router.put("/buyer/{buyer_id}", response_model=BuyerPydantic)

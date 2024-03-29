@@ -1,5 +1,10 @@
 from src.daos.Buyer_DAO import BuyerInfoDAO
+from src.models.data_model import UserPermission, GenericPermission
 from src.managers.generic_manager import GenericManager
+from src.managers.permission_manager import PermissionManager
+
+
+permission_manager = PermissionManager()
 
 
 class BuyerManager(GenericManager):
@@ -10,4 +15,10 @@ class BuyerManager(GenericManager):
         buyer = self.dao.get_by_email(email)
         if not buyer:
             buyer = self.dao.create_with_email_only(email)
+            permission_manager.create(
+                UserPermission(
+                    user_email=email,
+                    permissions=GenericPermission(accessible_uuids=[buyer.id]),
+                )
+            )
         return buyer

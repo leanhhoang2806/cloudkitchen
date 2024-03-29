@@ -130,3 +130,12 @@ CREATE TABLE Dish_Review(
     FOREIGN KEY (buyer_id) REFERENCES Buyer_Info(id),
     PRIMARY KEY (id)
 );
+
+CREATE TABLE Permission (
+    id UUID DEFAULT uuid_generate_v4(),
+    user_email VARCHAR(100) UNIQUE NOT NULL,
+    permissions JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+);

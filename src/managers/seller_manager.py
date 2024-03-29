@@ -1,4 +1,6 @@
+from fastapi import HTTPException, status
 from src.daos.Seller_DAO import SellerInfoDAO
+from src.managers.permission_manager import PermissionManager
 from src.managers.generic_manager import GenericManager
 from typing import Optional
 from src.models.postgres_model import SellerInfo
@@ -8,10 +10,22 @@ from src.models.data_model import PaymentCreate
 from uuid import UUID
 
 
+permission_manager = PermissionManager()
+
+
 class SellerInfoManager(GenericManager):
     def __init__(self):
         super().__init__(SellerInfoDAO())
         self.payment_manager = PaymentManager()
+
+    def get_with_permission(
+        self, token_email: str, seller_id: UUID
+    ) -> Optional[SellerInfo]:
+        if not permission_manager.is_authorized_to_access(token_email, seller_id):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized"
+            )
+        return self.dao.get(seller_id)
 
     def get_by_email(self, seller_email: str) -> Optional[SellerInfo]:
         return self.dao.get_by_email(seller_email)
@@ -27,6 +41,7 @@ class SellerInfoManager(GenericManager):
             seller_id=seller.id,
         )
         self.payment_manager.create(paymentCreate)
+        permission_manager.add_permission(seller_info_data.email, seller.id)
         return seller
 
     def get_seller_name_by_dish_id(self, dish_id: UUID) -> Optional[SellerInfo]:

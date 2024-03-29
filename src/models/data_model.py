@@ -1,5 +1,5 @@
 from pydantic import BaseModel, PositiveInt
-from typing import Optional, List
+from typing import Optional, List, Dict
 from uuid import UUID
 from datetime import datetime
 
@@ -172,7 +172,6 @@ class ChatInfoCreate(BaseModel):
 
 class GenericResponsePayload(StripeSubscriptionStatus):
     # combined order classes if needed
-
     pass
 
 
@@ -181,3 +180,21 @@ class DishReviewCreate(BaseModel):
     buyer_id: UUID
     content: str
     rating: PositiveInt
+
+
+class GenericPermission(BaseModel):
+    accessible_uuids: List[UUID]
+
+
+class UserPermission(BaseModel):
+    user_email: str
+    permissions: GenericPermission
+
+    def dict(self, **kwargs) -> Dict[str, any]:
+        data = super().dict(**kwargs)
+        data["permissions"] = self.permissions.dict()
+        return data
+
+
+class UserPermissionUpdate(BaseModel):
+    permissions: dict
