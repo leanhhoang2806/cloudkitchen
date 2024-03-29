@@ -3,3 +3,4 @@ myenv/
 **/__pycache__
 .env
 src/external_api/
+dev/
