@@ -61,3 +61,11 @@ class ReduceLimitOnSubscriptionCancelledError(Exception):
     def __init__(self, message="ReduceLimitOnSubscriptionCancelledError") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class BuyerMustUpdateAddressBeforeOrderError(Exception):
+    def __init__(
+        self, message="Buyer did not set delivery address before checkout"
+    ) -> None:
+        self.message = message
+        super().__init__(self.message)

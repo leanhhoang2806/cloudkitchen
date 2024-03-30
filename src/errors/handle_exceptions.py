@@ -4,6 +4,8 @@ from src.errors.custom_exceptions import (
     InvalidTokenException,
     UniqueViolationException,
     MediaUploadLimitException,
+    BuyerMustUpdateAddressBeforeOrderError,
+    GenericTryError,
 )
 import logging
 
@@ -23,6 +25,7 @@ def handle_exceptions(func):
                     InvalidTokenException,
                     UniqueViolationException,
                     MediaUploadLimitException,
+                    BuyerMustUpdateAddressBeforeOrderError,
                 ]
             )
 
@@ -31,5 +34,18 @@ def handle_exceptions(func):
                     raise HTTPException(status_code=400, detail=e.message)
 
             raise HTTPException(status_code=500, detail="Internal server error")
+
+    return wrapper
+
+
+def handle_errors(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except BuyerMustUpdateAddressBeforeOrderError:
+            raise
+        except Exception:
+            raise GenericTryError
 
     return wrapper

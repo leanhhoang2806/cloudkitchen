@@ -10,3 +10,7 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/your_dbname
 
 # Get the token from front end
 1. Login and find the token at 
+
+
+# Managing github actions note
+1. If the build is stuck, Just  cancel the build and restart

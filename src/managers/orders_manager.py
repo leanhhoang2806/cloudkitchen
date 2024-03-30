@@ -4,9 +4,11 @@ from src.models.postgres_model import Order, Dish
 from uuid import UUID
 from typing import Optional, List
 from src.models.data_model import OrderCreate, SingleOrderCreate
-from src.managers.dish_manager import DishManager
+from src.managers.all_managers import ALL_MANAGER
+from src.errors.custom_exceptions import BuyerMustUpdateAddressBeforeOrderError
 
-dish_manager = DishManager()
+dish_manager = ALL_MANAGER.dish_manager
+buyer_manager = ALL_MANAGER.buyer_manager
 
 
 class OrderManager(GenericManager):
@@ -14,6 +16,8 @@ class OrderManager(GenericManager):
         super().__init__(OrderDAO())
 
     def create(self, order_create: OrderCreate) -> List[Order]:
+        if not (buyer_manager.is_address_exist(order_create.buyer_id)):
+            raise BuyerMustUpdateAddressBeforeOrderError
         seller_id_by_dish: List[Dish] = [
             dish_manager.get(dish_id) for dish_id in order_create.dish_id
         ]

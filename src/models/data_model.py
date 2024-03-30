@@ -14,7 +14,6 @@ class BuyerInfoCreate(BaseModel):
 
 class BuyerInfoUpdate(BaseModel):
     name: str
-    email: str
     phone: Optional[str]
     address: Optional[str]
 
@@ -126,6 +125,7 @@ class StripeClientSecret(BaseModel):
 
 
 class StripePaymentInfo(BaseModel):
+    buyer_id: UUID
     dish_ids: List[UUID]
 
 

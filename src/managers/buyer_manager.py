@@ -2,6 +2,7 @@ from src.daos.Buyer_DAO import BuyerInfoDAO
 from src.models.data_model import UserPermission, GenericPermission
 from src.managers.generic_manager import GenericManager
 from src.managers.permission_manager import PermissionManager
+from uuid import UUID
 
 
 permission_manager = PermissionManager()
@@ -22,3 +23,7 @@ class BuyerManager(GenericManager):
                 )
             )
         return buyer
+
+    def is_address_exist(self, buyer_id: UUID) -> bool:
+        buyer = self.dao.get(buyer_id)
+        return True if buyer.address else False

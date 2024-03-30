@@ -24,10 +24,10 @@ payment_manager = PaymentManager()
 
 @router.post("/stripe-payment/", response_model=StripeClientSecret)
 async def payment_amount(
-    dish_ids: StripePaymentInfo,
+    payment_info: StripePaymentInfo,
     token=Depends(validate_token),
 ):
-    return stripe_manager.create_intent(dish_ids.dish_ids)
+    return stripe_manager.create_intent(payment_info.buyer_id, payment_info.dish_ids)
 
 
 @router.put("/stripe-payment/update-limit")
