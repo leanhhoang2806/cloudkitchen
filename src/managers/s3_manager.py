@@ -29,6 +29,7 @@ payment_manager = PaymentManager()
 seller_info_manager = SellerInfoManager()
 MAX_IMAGE_SIZE_MB = 5
 
+
 class S3Uploader:
     def __init__(
         self, aws_access_key_id: str, aws_secret_access_key: str, bucket_name: str
@@ -55,7 +56,7 @@ class S3Uploader:
     def _is_image_valid(self, file: UploadFile) -> bool:
         try:
             read_image = file.file.read()
-            file_size_mb = len(read_image) / (1024 * 1024) 
+            file_size_mb = len(read_image) / (1024 * 1024)
             if file_size_mb > MAX_IMAGE_SIZE_MB:
                 return False
             img = Image.open(BytesIO(read_image))
