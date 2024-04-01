@@ -10,7 +10,10 @@ class BuyerInfoDAO(GenericDAO):
     def get_by_email(self, email: str):
         try:
             return (
-                session.query(self.model).filter(self.model.email == str(email)).first()
+                session.query(self.model)
+                .filter(self.model.email == str(email))
+                .order_by(self.model.updated_at.desc())
+                .first()
             )
         finally:
             session.close()

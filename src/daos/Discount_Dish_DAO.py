@@ -14,6 +14,7 @@ class DiscountDishDAO(GenericDAO):
             return (
                 session.query(DiscountedDish)
                 .filter(DiscountedDish.dish_id == str(dish_id))
+                .order_by(DiscountedDish.updated_at.desc())
                 .first()
             )
 

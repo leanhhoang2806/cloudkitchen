@@ -26,7 +26,13 @@ class DishDAO(GenericDAO):
 
     def get_dishes_paginated(self, skip: int, limit: int) -> Optional[List[Dish]]:
         try:
-            return session.query(self.model).offset(skip).limit(limit).all()
+            return (
+                session.query(self.model)
+                .offset(skip)
+                .limit(limit)
+                .order_by(self.model.updated_at.desc())
+                .all()
+            )
         finally:
             session.close()
 
@@ -40,6 +46,7 @@ class DishDAO(GenericDAO):
                 .filter(
                     or_(SellerInfo.name == seller_name, SellerInfo.address == zipcode)
                 )
+                .order_by(Dish.updated_at.desc())
                 .all()
             )
             return dishes
@@ -68,6 +75,7 @@ class DishDAO(GenericDAO):
             dishes = (
                 session.query(self.model)
                 .filter(self.model.id.in_([str(dish_id) for dish_id in dish_ids]))
+                .order_by(self.model.updated_at.desc())
                 .all()
             )
             return dishes
@@ -81,6 +89,7 @@ class DishDAO(GenericDAO):
                 session.query(Dish)
                 .join(SellerInfo)
                 .filter(SellerInfo.zipcode.in_(zipcodeds_str))
+                .order_by(Dish.updated_at.desc())
                 .all()
             )
             return dishes

@@ -16,8 +16,9 @@ class OrderDAO(GenericDAO):
     def get_by_buyer_id(self, buyer_id: UUID) -> Optional[Order]:
         try:
             return (
-                session.query(self.model)
-                .filter(self.model.buyer_id == str(buyer_id))
+                session.query(Order)
+                .filter(Order.buyer_id == str(buyer_id))
+                .order_by(Order.updated_at.desc())
                 .all()
             )
         finally:
@@ -35,7 +36,12 @@ class OrderDAO(GenericDAO):
 
     def get_by_seller_id(self, seller_id: UUID) -> Optional[Order]:
         try:
-            return session.query(Order).filter(Order.seller_id == str(seller_id)).all()
+            return (
+                session.query(Order)
+                .filter(Order.seller_id == str(seller_id))
+                .order_by(Order.updated_at.desc())
+                .all()
+            )
 
         finally:
             session.close()

@@ -31,6 +31,7 @@ class GenericDAO:
             return (
                 session.query(self.model)
                 .filter(self.model.id == str(instance_id))
+                .order_by(self.model.updated_at.desc())
                 .first()
             )
         finally:

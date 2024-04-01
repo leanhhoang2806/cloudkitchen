@@ -32,7 +32,10 @@ class ChatInfoDAO(GenericDAO):
     def get_chat_room_by_buyer_id(self, buyer_id: UUID) -> Optional[List[ChatInfo]]:
         try:
             return (
-                session.query(ChatInfo).filter(ChatInfo.buyer_id == str(buyer_id)).all()
+                session.query(ChatInfo)
+                .filter(ChatInfo.buyer_id == str(buyer_id))
+                .order_by(ChatInfo.updated_at.desc())
+                .all()
             )
 
         finally:
@@ -43,6 +46,7 @@ class ChatInfoDAO(GenericDAO):
             return (
                 session.query(ChatInfo)
                 .filter(ChatInfo.seller_id == str(seller_id))
+                .order_by(ChatInfo.updated_at.desc())
                 .all()
             )
 
