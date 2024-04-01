@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 stripe_manager = StripeManager()
 payment_manager = PaymentManager()
 seller_info_manager = SellerInfoManager()
-
+MAX_IMAGE_SIZE_MB = 5
 
 class S3Uploader:
     def __init__(
@@ -52,9 +52,13 @@ class S3Uploader:
             # If the bucket does not exist, create it
             self.s3_client.create_bucket(Bucket=bucket_name)
 
-    def _is_image(self, file: UploadFile) -> bool:
+    def _is_image_valid(self, file: UploadFile) -> bool:
         try:
-            img = Image.open(BytesIO(file.file.read()))
+            read_image = file.file.read()
+            file_size_mb = len(read_image) / (1024 * 1024) 
+            if file_size_mb > MAX_IMAGE_SIZE_MB:
+                return False
+            img = Image.open(BytesIO(read_image))
             img.verify()
             return True
         except (IOError, SyntaxError) as e:
@@ -65,7 +69,7 @@ class S3Uploader:
         try:
             if not self._is_allowed_to_upload(seller_id):
                 raise MediaUploadLimitException
-            if not self._is_image(file):
+            if not self._is_image_valid(file):
                 raise NotAllowedToUploadThisImage
 
             file.file.seek(0)  # reset after any image process
