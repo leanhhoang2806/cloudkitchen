@@ -1,4 +1,6 @@
 import boto3
+from PIL import Image
+from io import BytesIO
 from botocore.exceptions import NoCredentialsError
 from fastapi import UploadFile
 from typing import Optional
@@ -10,7 +12,10 @@ from src.managers.stripe_manager import StripeManager
 from src.managers.seller_manager import SellerInfoManager
 from src.models.data_model import PaymentUpdate
 from uuid import UUID
-from src.errors.custom_exceptions import MediaUploadLimitException
+from src.errors.custom_exceptions import (
+    MediaUploadLimitException,
+    NotAllowedToUploadThisImage,
+)
 import logging
 
 from src.managers.configuration_manager import CONFIG
@@ -47,11 +52,23 @@ class S3Uploader:
             # If the bucket does not exist, create it
             self.s3_client.create_bucket(Bucket=bucket_name)
 
+    def _is_image(self, file: UploadFile) -> bool:
+        try:
+            img = Image.open(BytesIO(file.file.read()))
+            img.verify()
+            return True
+        except (IOError, SyntaxError) as e:
+            logger.error(e)
+            return False
+
     def upload_to_s3(self, file: UploadFile, seller_id: UUID) -> Optional[str]:
         try:
             if not self._is_allowed_to_upload(seller_id):
                 raise MediaUploadLimitException
+            if not self._is_image(file):
+                raise NotAllowedToUploadThisImage
 
+            file.file.seek(0)  # reset after any image process
             unique_filename = f"{file.filename.split('.')[0]}_{str(uuid4())}.{file.filename.split('.')[-1]}"
             self.s3_client.upload_fileobj(file.file, self.bucket_name, unique_filename)
 

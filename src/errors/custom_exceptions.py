@@ -69,3 +69,9 @@ class BuyerMustUpdateAddressBeforeOrderError(Exception):
     ) -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class NotAllowedToUploadThisImage(Exception):
+    def __init__(self, message="NotAllowedToUploadThisImage") -> None:
+        self.message = message
+        super().__init__(self.message)

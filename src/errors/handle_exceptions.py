@@ -6,6 +6,7 @@ from src.errors.custom_exceptions import (
     MediaUploadLimitException,
     BuyerMustUpdateAddressBeforeOrderError,
     GenericTryError,
+    NotAllowedToUploadThisImage,
 )
 import logging
 
@@ -26,6 +27,7 @@ def handle_exceptions(func):
                     UniqueViolationException,
                     MediaUploadLimitException,
                     BuyerMustUpdateAddressBeforeOrderError,
+                    NotAllowedToUploadThisImage,
                 ]
             )
 
