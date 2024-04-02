@@ -29,10 +29,10 @@ jobs:
           registry-type: private
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.ECR_URI }}:${GITHUB_SHA} .
+        run: docker build -t ${{ secrets.ECR_URI }}:popo24_fastapi_server_backend .
 
       - name: Push Docker image to ECR
-        run: docker push ${{ secrets.ECR_URI }}:${GITHUB_SHA}
+        run: docker push ${{ secrets.ECR_URI }}:popo24_fastapi_server_backend
 
 
   build-only:
@@ -45,4 +45,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build Docker image
-        run: docker build -t popo24_backend:${GITHUB_SHA} .
+        run: docker build -t ${{ secrets.ECR_URI }}:${GITHUB_SHA} .
