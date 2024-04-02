@@ -9,7 +9,7 @@ on:
 jobs:
   build-and-push-main:
     name: Build and Push Docker Image (Main Branch)
-    if: github.ref == 'refs/heads/main'  # Execute only for main branch
+    if: github.ref == 'refs/heads/main'  
     runs-on: ubuntu-latest
     
     steps:
@@ -37,7 +37,7 @@ jobs:
 
   build-only:
     name: Build Docker Image (Other Branches)
-    if: github.ref != 'refs/heads/main'  # Execute for all branches except main
+    if: github.ref != 'refs/heads/main' 
     runs-on: ubuntu-latest
 
     steps:
