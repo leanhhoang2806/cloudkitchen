@@ -47,7 +47,3 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t popo24_backend:${GITHUB_SHA} .
-
-      - name: Tag Docker image as latest
-        if: always()  # This step should always run
-        run: docker tag popo24_backend:${GITHUB_SHA} popo24_backend:latest
