@@ -34,6 +34,24 @@ jobs:
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_URI }}:popo24_fastapi_server_backend
 
+      - name: Remove Untagged Docker images from ECR
+        run: |
+          untagged_images=$(aws ecr list-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json)
+          if [ -n "$untagged_images" ]; then
+            aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids "$untagged_images"
+          else
+            echo "No untagged images found to remove."
+          fi
+
+      # - name: Deploy to Amazon ECS
+      #   uses: aws-actions/amazon-ecs-deploy-task@v2
+      #   with:
+      #     cluster: <your-cluster-name>
+      #     service: <your-service-name>
+      #     task-definition: <your-task-definition-name>
+      #     image: ${{ secrets.ECR_URI }}:popo24_fastapi_server_backend
+      #     image-region: <your-ecr-region>
+      #     wait-for-service-stability: true
 
   build-only:
     name: Build Docker Image (Other Branches)
