@@ -30,11 +30,12 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t popo24_backend:${GITHUB_SHA} .
-          docker tag popo24_backend:${GITHUB_SHA} popo24_backend:latest
+          docker build -t ${{ secrets.ECR_URI }}:${GITHUB_SHA} .
+          docker tag ${{ secrets.ECR_URI }}:${GITHUB_SHA} ${{ secrets.ECR_URI }}:latest
 
       - name: Push Docker image to ECR
-        run: docker push popo24_backend:latest
+        run: docker push ${{ secrets.ECR_URI }}:${GITHUB_SHA} && docker push popo24_backend:latest
+
 
   build-only:
     name: Build Docker Image (Other Branches)
