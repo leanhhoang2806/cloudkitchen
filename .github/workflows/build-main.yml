@@ -4,15 +4,39 @@ on:
   push:
     branches:
       - main
+      - '*'
 
 jobs:
-  build:
+  build-and-push-main:
+    name: Build and Push Docker Image (Main Branch)
+    if: github.ref == 'refs/heads/main'  # Execute only for main branch
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      
-    - name: Build Docker image
-      run: docker build -t myapp .
-      
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: us-east-1  # Replace with your AWS region
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.ECR_URI }}/popo24_ecr:${GITHUB_SHA} .
+
+      - name: Push Docker image to ECR
+        run: docker push ${{ secrets.ECR_URI }}/popo24_ecr:${GITHUB_SHA}
+
+  build-only:
+    name: Build Docker Image (Other Branches)
+    if: github.ref != 'refs/heads/main'  # Execute for all branches except main
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.ECR_URI }}/popo24_ecr:${GITHUB_SHA} .
