@@ -14,7 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Run linting check
-RUN flake8 . --exclude=myenv
+RUN flake8 . --exclude=myenv,dev
 ENV PYTHONDONTWRITEBYTECODE 1
 
 

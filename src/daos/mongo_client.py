@@ -17,4 +17,4 @@ class MongoClient:
         return self.client.get_database("your_database")
 
 
-MONGO_DB = MongoClient().get_db()
+# MONGO_DB = MongoClient().get_db()

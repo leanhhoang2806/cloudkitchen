@@ -12,7 +12,7 @@ from sqlalchemy.orm import Session
     {
         "AUTH0_ISSUER": "mocked_AUTH0_ISSUER",
         "API_IDENTIFIER": "mocked_API_IDENTIFIER",
-        "POSTGRES_DATABASE_URL": "postgresql://your_user:your_password@postgres/your_dbname",
+        "POSTGRES_DATABASE_URL_CONNECTION_STRING": "postgresql://your_user:your_password@postgres/popo_24",
     },
 )
 @patch("src.managers.configuration_manager.ConfigurationManager", autospec=True)

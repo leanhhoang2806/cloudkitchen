@@ -1,7 +1,7 @@
 black . && docker-compose down -v && docker volume prune -f  && docker-compose up -d --build
 
 # Auto generate data model
-sqlacodegen postgresql://your_user:your_password@localhost:5432/your_dbname
+sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 
 # to run integration test
 1. Spin up all needed containers

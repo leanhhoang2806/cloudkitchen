@@ -18,7 +18,7 @@ services:
   postgres:
     image: postgres:12
     environment:
-      POSTGRES_DB: your_dbname
+      POSTGRES_DB: popo_24
       POSTGRES_USER: your_user
       POSTGRES_PASSWORD: your_password
     ports:
@@ -32,7 +32,7 @@ services:
       - ./migrations:/flyway/sql
     depends_on:
       - postgres
-    command: ["-url=jdbc:postgresql://localhost:5432/your_dbname", "-user=your_user", "-password=your_password", "-connectRetries=60", "migrate"]
+    command: ["-url=jdbc:postgresql://localhost:5432/popo_24", "-user=your_user", "-password=your_password", "-connectRetries=60", "migrate"]
     network_mode: "host"
 
   localstack:
@@ -65,7 +65,7 @@ services:
     image: schemaspy/schemaspy
     depends_on:
       - postgres
-    command: ["-t", "pgsql", "-host", "postgres", "-db", "your_dbname", "-u", "your_user", "-p", "your_password"]
+    command: ["-t", "pgsql", "-host", "postgres", "-db", "popo_24", "-u", "your_user", "-p", "your_password"]
     ports:
       - "8080:8080"
     networks:

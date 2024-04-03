@@ -18,5 +18,5 @@ class Database:
             db.close()
 
 
-db = Database(CONFIG.POSTGRES_DATABASE_URL)
+db = Database(CONFIG.POSTGRES_DATABASE_URL_CONNECTION_STRING)
 session = db.get_session()
