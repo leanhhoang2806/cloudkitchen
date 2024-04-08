@@ -79,4 +79,6 @@ async def stripe_webhook(request: Request):
 
     # Handle other event types if needed
 
-    return JSONResponse(status_code=200)
+    return JSONResponse(
+        status_code=200, content={"message": "succesfull created webhook"}
+    )
