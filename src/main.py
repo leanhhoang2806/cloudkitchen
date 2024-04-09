@@ -15,8 +15,18 @@ from src.routes import (
     # chat_router,
     dish_review_router,
 )
+from alembic.config import Config
+from alembic import command
 
+
+def run_migrations():
+    alembic_cfg = Config("./alembic.ini")  # Path to your Alembic configuration file
+    command.upgrade(alembic_cfg, "head")
+
+
+run_migrations()
 app = FastAPI()
+
 
 # Define allowed origins
 origins = ["*"]

@@ -11,7 +11,6 @@ services:
       - your_network
     depends_on:
       - postgres
-      - flyway
       - localstack
       - mongodb
 
@@ -26,14 +25,14 @@ services:
     networks:
       - your_network
 
-  flyway:
-    image: boxfuse/flyway:latest-alpine
-    volumes:
-      - ./migrations:/flyway/sql
-    depends_on:
-      - postgres
-    command: ["-url=jdbc:postgresql://localhost:5432/popo_24", "-user=your_user", "-password=your_password", "-connectRetries=60", "migrate"]
-    network_mode: "host"
+  # flyway:
+  #   image: boxfuse/flyway:latest-alpine
+  #   volumes:
+  #     - ./migrations:/flyway/sql
+  #   depends_on:
+  #     - postgres
+  #   command: ["-url=jdbc:postgresql://localhost:5432/popo_24", "-user=your_user", "-password=your_password", "-connectRetries=60", "migrate"]
+  #   network_mode: "host"
 
   localstack:
     image: localstack/localstack
@@ -58,7 +57,6 @@ services:
       - your_network
     depends_on:
       - postgres
-      - flyway
       - localstack
 
   schemaspy:
