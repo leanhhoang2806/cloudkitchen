@@ -34,25 +34,20 @@ jobs:
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_URI }}:latest
 
-      - name: Check if image exists in ECR
-        id: check_image_exists
-        run: |
-          image_exists=$(aws ecr describe-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageTag=latest --query 'imageDetails[*]' --output json)
-          if [ -n "$image_exists" ]; then
-            echo "::set-output name=image_exists::true"
-          else
-            echo "::set-output name=image_exists::false"
-          fi
-
-      - name: Remove Untagged Docker images from ECR
-        if: steps.check_image_exists.outputs.image_exists == 'true'
+      - name: List untagged Docker images from ECR
+        id: list_untagged_images
         run: |
           untagged_images=$(aws ecr list-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json)
-          if [ -n "$untagged_images" ]; then
-            aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids "$untagged_images"
-          else
-            echo "No untagged images found to remove."
-          fi
+          echo "::set-output name=untagged_images::$untagged_images"
+
+      - name: Remove Untagged Docker images from ECR
+        if: steps.list_untagged_images.outputs.untagged_images != ''
+        run: |
+          untagged_images="${{ steps.list_untagged_images.outputs.untagged_images }}"
+          aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids $untagged_images
+        else
+          echo "No untagged images found to remove."
+
 
 
       # - name: Deploy to Amazon ECS
