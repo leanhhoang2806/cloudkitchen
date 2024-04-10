@@ -54,7 +54,6 @@ jobs:
             echo "No untagged images found to remove."
           fi
 
-
       # - name: Deploy to Amazon ECS
       #   uses: aws-actions/amazon-ecs-deploy-task@v2
       #   with:

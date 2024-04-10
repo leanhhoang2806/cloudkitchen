@@ -14,3 +14,7 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 
 # Managing github actions note
 1. If the build is stuck, Just  cancel the build and restart
+
+# DevOps philosiphy
+1. The CI/CD end at pushing the image to ECR
+2. Terraform will take care of the provision on ECS
