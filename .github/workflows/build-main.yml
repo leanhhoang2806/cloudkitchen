@@ -29,7 +29,7 @@ jobs:
           registry-type: private
 
       - name: Build Docker image
-        run: docker build -t ${{ secrets.ECR_URI }}:lastest .
+        run: docker build -t ${{ secrets.ECR_URI }}:latest .
 
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_URI }}:latest
@@ -53,6 +53,7 @@ jobs:
           else
             echo "No untagged images found to remove."
           fi
+
 
       # - name: Deploy to Amazon ECS
       #   uses: aws-actions/amazon-ecs-deploy-task@v2
