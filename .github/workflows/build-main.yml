@@ -41,15 +41,16 @@ jobs:
 
       - name: Identify images to keep
         run: |
-          jq -r '.[] | select(.imageTags != null and (.imageTags | type) == "array" and (.imageTags | index("latest")) != null) | .imageDigest' images.json > images_to_keep.txt
+          jq -r '.[] | select(.imageTags != null and (.imageTags | index("latest")) != null) | .imageDigest' images.json > images_to_keep.txt
 
       - name: Delete images not tagged as "latest"
         if: steps.list_images.outputs.images
         run: |
-          images_to_delete=$(comm -13 <(sort images_to_keep.txt) <(sort images.json | jq -r '.[].imageDigest'))
+          images_to_delete=$(comm -23 <(sort images.json | jq -r '.[].imageDigest' | sort) <(sort images_to_keep.txt))
           for image in $images_to_delete; do
             aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
           done
+
 
 
   build-only:
