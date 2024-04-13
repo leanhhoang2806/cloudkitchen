@@ -37,14 +37,14 @@ jobs:
       - name: List images in ECR repository
         id: list_images
         run: |
-          aws ecr describe-images --repository-name ${{ secrets.ECR_URI }} --query 'imageDetails[*]' --output json > images.json
+          aws ecr describe-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --query 'imageDetails[*]' --output json > images.json
 
       - name: Delete non-latest images in ECR repository
         if: steps.list_images.outputs.images
         run: |
           images=$(jq '.[] | select(.imageTags[] != "latest") | .imageDigest' images.json)
           for image in $images; do
-            aws ecr batch-delete-image --repository-name ${{ secrets.ECR_URI }} --image-ids imageDigest=$image
+            aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
           done
 
   build-only:
