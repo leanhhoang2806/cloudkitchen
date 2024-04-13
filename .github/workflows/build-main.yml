@@ -55,7 +55,6 @@ jobs:
             aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
           done
 
-
   build-only:
     name: Build Docker Image (Other Branches)
     if: github.ref != 'refs/heads/main' 
