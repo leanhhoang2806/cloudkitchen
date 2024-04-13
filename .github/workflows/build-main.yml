@@ -34,35 +34,18 @@ jobs:
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_URI }}:latest
 
-      - name: Check if image exists in ECR
-        id: check_image_exists
+      - name: List images in ECR repository
+        id: list_images
         run: |
-          image_exists=$(aws ecr describe-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageTag=latest --query 'imageDetails[*]' --output json)
-          if [ -n "$image_exists" ]; then
-            echo "::set-output name=image_exists::true"
-          else
-            echo "::set-output name=image_exists::false"
-          fi
+          aws ecr describe-images --repository-name ${{ secrets.ECR_URI }} --query 'imageDetails[*]' --output json > images.json
 
-      - name: Remove Untagged Docker images from ECR
-        if: steps.check_image_exists.outputs.image_exists == 'true'
+      - name: Delete non-latest images in ECR repository
+        if: steps.list_images.outputs.images
         run: |
-          untagged_images=$(aws ecr list-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --filter "tagStatus=UNTAGGED" --query 'imageIds[*]' --output json)
-          if [ -n "$untagged_images" ]; then
-            aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids "$untagged_images"
-          else
-            echo "No untagged images found to remove."
-          fi
-
-      # - name: Deploy to Amazon ECS
-      #   uses: aws-actions/amazon-ecs-deploy-task@v2
-      #   with:
-      #     cluster: <your-cluster-name>
-      #     service: <your-service-name>
-      #     task-definition: <your-task-definition-name>
-      #     image: ${{ secrets.ECR_URI }}:popo24_fastapi_server_backend
-      #     image-region: <your-ecr-region>
-      #     wait-for-service-stability: true
+          images=$(jq '.[] | select(.imageTags[] != "latest") | .imageDigest' images.json)
+          for image in $images; do
+            aws ecr batch-delete-image --repository-name ${{ secrets.ECR_URI }} --image-ids imageDigest=$image
+          done
 
   build-only:
     name: Build Docker Image (Other Branches)
