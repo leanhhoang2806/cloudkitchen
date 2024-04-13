@@ -46,12 +46,10 @@ jobs:
       - name: Delete images not tagged as "latest"
         if: steps.list_images.outputs.images
         run: |
-          images_to_delete=$(comm -23 <(sort images.json | jq -r '.[].imageDigest' | sort) <(sort images_to_keep.txt))
+          images_to_delete=$(comm -13 <(sort images_to_keep.txt) <(sort images.json | jq -r '.[].imageDigest'))
           for image in $images_to_delete; do
             aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
           done
-
-
 
   build-only:
     name: Build Docker Image (Other Branches)
