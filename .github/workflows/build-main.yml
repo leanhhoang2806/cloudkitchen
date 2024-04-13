@@ -39,13 +39,22 @@ jobs:
         run: |
           aws ecr describe-images --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --query 'imageDetails[*]' --output json > images.json
 
-      - name: Delete non-latest images in ECR repository
+      - name: Delete non-latest tagged images in ECR repository
         if: steps.list_images.outputs.images
         run: |
-          images=$(jq '.[] | select(.imageTags[] != "latest") | .imageDigest' images.json)
+          images=$(jq '.[] | select(.imageTags[] != "latest" and .imageTags != null) | .imageDigest' images.json)
           for image in $images; do
             aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
           done
+
+      - name: Delete untagged images in ECR repository
+        if: steps.list_images.outputs.images
+        run: |
+          untagged_images=$(jq '.[] | select(.imageTags == null) | .imageDigest' images.json)
+          for image in $untagged_images; do
+            aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
+          done
+
 
   build-only:
     name: Build Docker Image (Other Branches)
