@@ -41,7 +41,7 @@ jobs:
 
       - name: Identify images to keep
         run: |
-          jq -r '.[] | select(.imageTags != null and .imageTags | index("latest") != null) | .imageDigest' images.json > images_to_keep.txt
+          jq -r '.[] | select(.imageTags != null and (.imageTags | type) == "array" and (.imageTags | index("latest")) != null) | .imageDigest' images.json > images_to_keep.txt
 
       - name: Delete images not tagged as "latest"
         if: steps.list_images.outputs.images
