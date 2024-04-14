@@ -43,13 +43,24 @@ jobs:
         run: |
           jq -r '.[] | select(.imageTags != null and (.imageTags | index("latest")) != null) | .imageDigest' images.json > images_to_keep.txt
 
-      - name: Delete images not tagged as "latest"
+      - name: Identify images without tags
+        run: |
+          jq -r '.[] | select(.imageTags == null) | .imageDigest' images.json > images_no_tags.txt
+
+      - name: Delete previous images
         if: steps.list_images.outputs.images
         run: |
           images_to_delete=$(comm -13 <(sort images_to_keep.txt) <(sort images.json | jq -r '.[].imageDigest'))
           for image in $images_to_delete; do
             aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest=$image
           done
+
+      - name: Delete images without tags
+        run: |
+          while IFS= read -r image; do
+            aws ecr batch-delete-image --repository-name ${{ secrets.REMOTE_ECR_REPO_NAME }} --image-ids imageDigest="$image"
+          done < images_no_tags.txt
+
 
   build-only:
     name: Build Docker Image (Other Branches)
