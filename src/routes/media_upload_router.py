@@ -1,5 +1,5 @@
 from fastapi import File, UploadFile, Depends
-from src.managers.s3_manager import S3_UPLOADER, BUCKET_NAME
+from src.managers.s3_manager import S3_UPLOADER
 from src.validations.validators import validate_token
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
@@ -8,7 +8,7 @@ from src.routes.custom_api_router import CustomAPIRouter
 router = CustomAPIRouter()
 
 
-S3_UPLOADER.create_bucket_if_not_exist(BUCKET_NAME)
+# S3_UPLOADER.create_bucket_if_not_exist(BUCKET_NAME)
 
 
 @router.post("/s3/upload/{seller_id}")
