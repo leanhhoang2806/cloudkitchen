@@ -33,6 +33,15 @@ jobs:
 
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_URI }}:latest
+      
+      
+      - name: Update ECS service
+        run: |
+          aws ecs update-service --cluster ${CLUSTER_NAME} --service ${SERVICE_NAME} --task-definition ${TASK_DEFINITION}
+        env:
+          CLUSTER_NAME: ${{ secrets.ECS_CLUSTER_NAME }}
+          SERVICE_NAME: ${{ secrets.ECS_SERVICE_NAME }}
+          TASK_DEFINITION: ${{ secrets.ECS_TASK_DEFINITION }}
 
       - name: List images in ECR repository
         id: list_images
