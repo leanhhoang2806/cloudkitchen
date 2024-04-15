@@ -18,3 +18,4 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 # DevOps philosiphy
 1. The CI/CD end at pushing the image to ECR
 2. Terraform will take care of the provision on ECS
+3. For the revision of this variable `secrets.ECS_TASK_DEFINITION` every time terraform `apply` happened, make sure to change the revision (manually doing this for now until filter references)

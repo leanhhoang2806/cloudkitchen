@@ -35,10 +35,16 @@ jobs:
         run: docker push ${{ secrets.ECR_URI }}:latest
       
       
+      - name: Get latest ECS task definition ARN
+        id: get-task-definition
+        run: |
+          latest_task_definition=$(aws ecs describe-services --cluster ${{ secrets.ECS_CLUSTER_NAME }} --services ${{ secrets.ECS_SERVICE_NAME }} --query 'services[0].taskDefinition' --output text)
+          echo "::set-output name=task_definition::$latest_task_definition"
+
       - name: Update ECS service
         run: |
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_NAME }} --service ${{ secrets.ECS_SERVICE_NAME }} --task-definition ${{ secrets.ECS_TASK_DEFINITION }}
-
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER_NAME }} --service ${{ secrets.ECS_SERVICE_NAME }} --task-definition ${{ steps.get-task-definition.outputs.task_definition }}
+  
       - name: List images in ECR repository
         id: list_images
         run: |
