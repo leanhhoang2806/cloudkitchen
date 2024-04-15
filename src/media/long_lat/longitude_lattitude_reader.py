@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
-import logging
+from src.logger.logger import initialize_logger
 
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = initialize_logger()
 
 
 class ZipcodeSearchReader:

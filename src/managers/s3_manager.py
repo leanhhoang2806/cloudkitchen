@@ -11,18 +11,16 @@ from src.managers.dish_manager import DishManager
 from src.managers.stripe_manager import StripeManager
 from src.managers.seller_manager import SellerInfoManager
 from src.models.data_model import PaymentUpdate
+from src.logger.logger import initialize_logger
 from uuid import UUID
 from src.errors.custom_exceptions import (
     MediaUploadLimitException,
     NotAllowedToUploadThisImage,
 )
-import logging
 
 from src.managers.configuration_manager import CONFIG
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+logger = initialize_logger()
 
 stripe_manager = StripeManager()
 payment_manager = PaymentManager()

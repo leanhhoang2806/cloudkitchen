@@ -10,14 +10,12 @@ from src.errors.custom_exceptions import (
     MultipleSellerSubscriptionDetected,
     ValidateSellerSubsciprtionError,
 )
-import logging
 from src.managers.all_managers import ALL_MANAGER
 from src.errors.custom_exceptions import BuyerMustUpdateAddressBeforeOrderError
 from src.errors.handle_exceptions import handle_errors
+from src.logger.logger import initialize_logger
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+logger = initialize_logger()
 
 stripe.api_key = CONFIG.STRIPE_API_KEY
 dish_manager = ALL_MANAGER.dish_manager
