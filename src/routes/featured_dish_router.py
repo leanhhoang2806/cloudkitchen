@@ -9,7 +9,7 @@ from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 from src.models.data_model import FeaturedDishCreate
 from typing import Optional, List
-import logging
+
 
 router = CustomAPIRouter()
 dish_manager = DishManager()
