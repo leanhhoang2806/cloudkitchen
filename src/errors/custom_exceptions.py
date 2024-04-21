@@ -75,3 +75,9 @@ class NotAllowedToUploadThisImage(Exception):
     def __init__(self, message="NotAllowedToUploadThisImage") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class MaximumFeaturedLimit(Exception):
+    def __init__(self, message="MaximumFeaturedLimit") -> None:
+        self.message = message
+        super().__init__(self.message)

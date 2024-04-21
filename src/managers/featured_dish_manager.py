@@ -16,3 +16,8 @@ class FeaturedDishManager(GenericManager):
 
     def delete_by_dish_id(self, dish_id: UUID) -> int:
         return self.dao.delete_by_dish_id(dish_id)
+
+    def get_featured_dish_by_dish_id(
+        self, dish_ids: List[UUID]
+    ) -> Optional[FeaturedDish]:
+        return self.dao.get_featured_dish_by_dish_id(dish_ids)

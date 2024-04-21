@@ -100,7 +100,7 @@ class S3Uploader:
                     PaymentUpdate(
                         email=seller_info.email,
                         picture_upload_limit=10,
-                        dishes_to_feature_limit=5,
+                        dishes_to_feature_limit=1,
                     )
                 )
         return payment_info.picture_upload_limit > len(dishes_owned_by_seller)

@@ -30,3 +30,23 @@ class FeaturedDishDAO(GenericDAO):
         finally:
             session.close()  # Close the session
             return 0
+
+    def get_featured_dish_by_seller_id(self, seller_id: UUID) -> Optional[FeaturedDish]:
+        try:
+            return (
+                session.query(FeaturedDish)
+                .filter(FeaturedDish.dish_id == str(seller_id))
+                .all()
+            )
+        finally:
+            session.close()
+
+    def get_featured_dish_by_dish_id(self, dish_ids: List[UUID]) -> int:
+        try:
+            return (
+                session.query(FeaturedDish)
+                .filter(FeaturedDish.dish_id.in_(dish_ids))
+                .all()
+            )
+        finally:
+            session.close()
