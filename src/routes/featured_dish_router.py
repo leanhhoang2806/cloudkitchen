@@ -9,7 +9,7 @@ from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 from src.models.data_model import FeaturedDishCreate
 from typing import Optional, List
-import logging
+
 
 router = CustomAPIRouter()
 dish_manager = DishManager()
@@ -41,7 +41,11 @@ async def add_featured_dish(
     featured_dish_count = featured_dish_manager.get_featured_dish_by_dish_id(dish_ids)
 
     payment_info = payment_manager.get_by_seller_id(dish_info.seller_id)
-    if len(featured_dish_count) > payment_info.dishes_to_feature_limit:
+    # For ecommerce platform, removed len(featured_dish_count) out of the condition
+    # "payment_info.dishes_to_feature_limit + len(featured_dish_count)"
+    if len(featured_dish_count) > payment_info.dishes_to_feature_limit + len(
+        featured_dish_count
+    ):
         raise MaximumFeaturedLimit
 
     featured_dish = featured_dish_manager.create(feature_dish)

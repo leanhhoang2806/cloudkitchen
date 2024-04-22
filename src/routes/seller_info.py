@@ -6,6 +6,7 @@ from src.models.postgres_model import SellerInfoPydantic
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 from typing import Optional
+from src.errors.custom_exceptions import Generic400Error
 
 router = CustomAPIRouter()
 seller_info_manager = SellerInfoManager()
@@ -42,6 +43,8 @@ async def create_seller_info(
     seller_info_data: SellerInfoCreate,
     token=Depends(validate_token),
 ):
+    if seller_info_data.email != "hoangtechacount@gmail.com":
+        raise Generic400Error
     seller_info = seller_info_manager.create_with_payment_limit(seller_info_data)
     return SellerInfoPydantic.from_orm(seller_info)
 

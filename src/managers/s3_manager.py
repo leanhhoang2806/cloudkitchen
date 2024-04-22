@@ -93,7 +93,11 @@ class S3Uploader:
     def _is_allowed_to_upload(self, seller_id: UUID) -> bool:
         payment_info = self.payment_manager.get_by_seller_id(seller_id)
         dishes_owned_by_seller = self.dish_manager.get_by_seller_id(seller_id)
-        if len(dishes_owned_by_seller) > payment_info.picture_upload_limit:
+        # For ecommerce platform, removed len(dishes_owned_by_seller) out of the condition
+        # "payment_info.picture_upload_limit + len(dishes_owned_by_seller)"
+        if len(dishes_owned_by_seller) > payment_info.picture_upload_limit + len(
+            dishes_owned_by_seller
+        ):
             if stripe_manager.is_seller_subsciption_active:
                 seller_info = seller_info_manager.get(seller_id)
                 payment_manager.payment_update_by_email(
@@ -103,7 +107,12 @@ class S3Uploader:
                         dishes_to_feature_limit=1,
                     )
                 )
-        return payment_info.picture_upload_limit > len(dishes_owned_by_seller)
+
+        # For ecommerce platform, removed len(dishes_owned_by_seller) out of the condition
+        # "payment_info.picture_upload_limit + len(dishes_owned_by_seller)"
+        return payment_info.picture_upload_limit + len(dishes_owned_by_seller) > len(
+            dishes_owned_by_seller
+        )
 
 
 BUCKET_NAME = "popo24-public-read-images"
