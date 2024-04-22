@@ -41,8 +41,11 @@ async def add_featured_dish(
     featured_dish_count = featured_dish_manager.get_featured_dish_by_dish_id(dish_ids)
 
     payment_info = payment_manager.get_by_seller_id(dish_info.seller_id)
-    # For ecommerce platform, removed len(featured_dish_count) out of the condition  "payment_info.dishes_to_feature_limit + len(featured_dish_count)"
-    if len(featured_dish_count) > payment_info.dishes_to_feature_limit + len(featured_dish_count):
+    # For ecommerce platform, removed len(featured_dish_count) out of the condition
+    # "payment_info.dishes_to_feature_limit + len(featured_dish_count)"
+    if len(featured_dish_count) > payment_info.dishes_to_feature_limit + len(
+        featured_dish_count
+    ):
         raise MaximumFeaturedLimit
 
     featured_dish = featured_dish_manager.create(feature_dish)
