@@ -8,6 +8,7 @@ from src.errors.custom_exceptions import (
     GenericTryError,
     NotAllowedToUploadThisImage,
     MaximumFeaturedLimit,
+    Generic400Error,
 )
 import logging
 
@@ -30,6 +31,7 @@ def handle_exceptions(func):
                     BuyerMustUpdateAddressBeforeOrderError,
                     NotAllowedToUploadThisImage,
                     MaximumFeaturedLimit,
+                    Generic400Error,
                 ]
             )
 
