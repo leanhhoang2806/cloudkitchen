@@ -180,6 +180,15 @@ class DishReviewCreate(BaseModel):
     buyer_id: UUID
     content: str
     rating: PositiveInt
+    image_data: str
+
+
+class DishReviewCreateWithS3(BaseModel):
+    dish_id: UUID
+    buyer_id: UUID
+    content: str
+    rating: PositiveInt
+    s3_path: str
 
 
 class GenericPermission(BaseModel):

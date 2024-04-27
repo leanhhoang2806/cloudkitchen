@@ -1,4 +1,5 @@
 import boto3
+import base64
 from PIL import Image
 from io import BytesIO
 from botocore.exceptions import NoCredentialsError
@@ -74,6 +75,22 @@ class S3Uploader:
             file.file.seek(0)  # reset after any image process
             unique_filename = f"{file.filename.split('.')[0]}_{str(uuid4())}.{file.filename.split('.')[-1]}"
             self.s3_client.upload_fileobj(file.file, self.bucket_name, unique_filename)
+
+            # Generate the S3 URL
+            s3_url = f"https://{self.bucket_name}.s3.amazonaws.com/{unique_filename}"
+            return s3_url
+        except NoCredentialsError:
+            # Handle credential errors
+            return None
+
+    def upload_to_s3_no_validation(self, file: str) -> Optional[str]:
+        try:
+            image_data = base64.b64decode(file)
+            unique_filename = f"{str(uuid4())}.jpeg"
+            image_bytes_io = BytesIO(image_data)
+            self.s3_client.upload_fileobj(
+                image_bytes_io, self.bucket_name, unique_filename
+            )
 
             # Generate the S3 URL
             s3_url = f"https://{self.bucket_name}.s3.amazonaws.com/{unique_filename}"

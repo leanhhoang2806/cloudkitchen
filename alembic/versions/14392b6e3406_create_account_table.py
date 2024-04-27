@@ -340,6 +340,7 @@ def upgrade():
         sa.Column("buyer_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("content", sa.String(length=255), nullable=False),
         sa.Column("rating", sa.Integer(), nullable=False),
+        sa.Column("s3_path", sa.String(), nullable=True),
         sa.Column(
             "created_at",
             sa.TIMESTAMP,

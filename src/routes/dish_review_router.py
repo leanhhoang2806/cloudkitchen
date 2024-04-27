@@ -1,8 +1,9 @@
 from fastapi import Depends, Response, status
 from src.validations.validators import validate_token
 from src.managers.Dish_Review_manager import DishReviewManager
-from src.models.data_model import DishReviewCreate
+from src.models.data_model import DishReviewCreateWithS3, DishReviewCreate
 from src.models.postgres_model import DishReviewPydantic
+from src.managers.s3_manager import S3_UPLOADER
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 from typing import Optional, List
@@ -13,8 +14,20 @@ dish_review_manager = DishReviewManager()
 
 
 @router.post("/dish-review/", response_model=DishReviewPydantic)
-async def create_dish_review(payload: DishReviewCreate, token=Depends(validate_token)):
-    review = dish_review_manager.create(payload)
+async def create_dish_review(
+    payload: DishReviewCreate,
+    token=Depends(validate_token),
+):
+    s3_path = S3_UPLOADER.upload_to_s3_no_validation(payload.image_data)
+    review = dish_review_manager.create(
+        DishReviewCreateWithS3(
+            s3_path=s3_path,
+            dish_id=payload.dish_id,
+            buyer_id=payload.buyer_id,
+            content=payload.content,
+            rating=payload.rating,
+        )
+    )
     return DishReviewPydantic.from_orm(review)
 
 

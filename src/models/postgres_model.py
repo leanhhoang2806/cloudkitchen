@@ -119,6 +119,7 @@ class DishReview(Base):
     buyer_id = Column(ForeignKey("Buyer_Info.id"), nullable=False)
     content = Column(String(255), nullable=False)
     rating = Column(Integer, nullable=False)
+    s3_path = Column(String, nullable=True)
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
     updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
 
