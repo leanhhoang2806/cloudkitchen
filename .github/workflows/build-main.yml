@@ -34,7 +34,6 @@ jobs:
       - name: Push Docker image to ECR
         run: docker push ${{ secrets.ECR_URI }}:latest
       
-      Pause update on ECS, using EC2 for now
       - name: Get latest ECS task definition ARN
         id: get-task-definition
         run: |
