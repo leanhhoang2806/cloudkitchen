@@ -27,3 +27,7 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 1. import logging
 2. use logging.info() to print out stuff
 
+
+# Managing database migrations
+`alembic revision -m <name>`
+
