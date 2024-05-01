@@ -31,3 +31,6 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 # Managing database migrations
 `alembic revision -m <name>`
 
+# To run the test suite
+1. Spin the the containers based on instructions above, wait for container to be ready
+2. under the same directory as `src`, run `pytest -s test/{your_file_directory}`
