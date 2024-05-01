@@ -34,3 +34,8 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 # To run the test suite
 1. Spin the the containers based on instructions above, wait for container to be ready
 2. under the same directory as `src`, run `pytest -s test/{your_file_directory}`
+
+
+# Notes:
+1. To manage UUID of a system. it's better to generate it at the application level. don't generate it at the database level. to avoid the case where a commit needs to happen then using this UUID in other tables, the commits will lose the transaction.
+2. Secondly, database is strictly for `storing` data, no logic should happen to store data. Just a plain data, get ready to write

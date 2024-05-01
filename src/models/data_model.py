@@ -1,10 +1,12 @@
-from pydantic import BaseModel, PositiveInt
+from pydantic import BaseModel, PositiveInt, Field
 from typing import Optional, List, Dict
 from uuid import UUID
+import uuid
 from datetime import datetime
 
 
 class BuyerInfoCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     name: str
     email: str
     phone: Optional[str]
@@ -19,6 +21,7 @@ class BuyerInfoUpdate(BaseModel):
 
 
 class SellerInfoCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     name: str
     email: str
     phone: Optional[str]
@@ -34,6 +37,7 @@ class SellerInfoUpdate(BaseModel):
 
 
 class DishCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     name: str
     description: Optional[str]
     price: float
@@ -74,6 +78,7 @@ class OrderStatusUpdate(BaseModel):
 
 
 class PurchaseCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     order_id: UUID
     dish_id: UUID
     quantity: int
@@ -86,6 +91,7 @@ class PurchaseUpdate(BaseModel):
 
 
 class PaymentsCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     email: str
     picture_upload_limit: int
     dishes_to_feature_limit: int
@@ -108,6 +114,7 @@ class FeaturedDishCreate(BaseModel):
 
 
 class PaymentCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     email: str
     picture_upload_limit: int
     dishes_to_feature_limit: int
@@ -134,6 +141,7 @@ class StripeSubscriptionStatus(BaseModel):
 
 
 class DiscountedDishCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     dish_id: UUID
     discounted_percentage: int
 
@@ -155,6 +163,7 @@ class ChatMessage(BaseModel):
 
 
 class ChatRoomCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     seller_id: UUID
     buyer_id: UUID
     messages: List[ChatMessage] = []
@@ -165,6 +174,7 @@ class ChatRoom(ChatRoomCreate):
 
 
 class ChatInfoCreate(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     seller_id: UUID
     buyer_id: UUID
     conversation_id: str
@@ -184,6 +194,7 @@ class DishReviewCreate(BaseModel):
 
 
 class DishReviewCreateWithS3(BaseModel):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4)
     dish_id: UUID
     buyer_id: UUID
     content: str
