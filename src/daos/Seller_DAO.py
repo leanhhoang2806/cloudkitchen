@@ -2,27 +2,21 @@ from src.models.postgres_model import SellerInfo
 from src.models.postgres_model import Dish
 from src.daos.BaseDAO import GenericDAO
 from typing import Optional
-from src.daos.database_session import session
+from src.daos.database_session import provide_session
 from uuid import UUID
+from sqlalchemy.orm import Session
 
 
 class SellerInfoDAO(GenericDAO):
     def __init__(self):
         super().__init__(SellerInfo)
 
-    def get_by_email(self, email: str) -> Optional[SellerInfo]:
-        try:
-            return (
-                session.query(self.model).filter(self.model.email == str(email)).first()
-            )
-        finally:
-            session.close()
+    @provide_session
+    def get_by_email(self, email: str, session: Session) -> Optional[SellerInfo]:
+        return session.query(self.model).filter(self.model.email == str(email)).first()
 
-    def get_seller_name_by_dish_id(self, dish_id: UUID) -> Optional[SellerInfo]:
-        try:
-            return (
-                session.query(SellerInfo).join(Dish).filter(Dish.id == dish_id).first()
-            )
-
-        finally:
-            session.close()
+    @provide_session
+    def get_seller_name_by_dish_id(
+        self, dish_id: UUID, session: Session
+    ) -> Optional[SellerInfo]:
+        return session.query(SellerInfo).join(Dish).filter(Dish.id == dish_id).first()

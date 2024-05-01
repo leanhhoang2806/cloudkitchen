@@ -1,17 +1,18 @@
 import pytest
-from functools import wraps
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
-from src.models.data_model import DishCreate, SellerInfoCreate, BuyerInfoCreate
-from src.models.postgres_model import Dish, SellerInfo, BuyerInfo
+from src.models.data_model import DishCreate, SellerInfoCreate
+from src.models.postgres_model import Dish, SellerInfo
 from uuid import UUID
 from faker import Faker
 from typing import Generator
 import requests
 
-BASE_URL = 'http://localhost:8000/api/v1'
+BASE_URL = "http://localhost:8000/api/v1"
 FIXED_ZIPCODE = "75025"
 fake = Faker()
+
+
 def _convert_uuids_to_strings(data_dict: dict) -> dict:
     converted_data = {}
     for key, value in data_dict.items():
@@ -20,10 +21,12 @@ def _convert_uuids_to_strings(data_dict: dict) -> dict:
         else:
             converted_data[key] = value
     return converted_data
+
+
 @pytest.fixture(scope="session")
 def session() -> Generator[Session, None, None]:
     # Define the connection string
-    connection_string = 'postgresql://your_user:your_password@localhost:5432/popo_24'
+    connection_string = "postgresql://your_user:your_password@localhost:5432/popo_24"
 
     # Create the SQLAlchemy engine
     engine = create_engine(connection_string)
@@ -44,11 +47,15 @@ def session() -> Generator[Session, None, None]:
 def generate_random_dish(seller_id: UUID) -> DishCreate:
     return DishCreate(
         name=fake.word(),
-        description=fake.sentence() if fake.boolean(chance_of_getting_true=50) else None,
+        description=(
+            fake.sentence() if fake.boolean(chance_of_getting_true=50) else None
+        ),
         price=fake.random_number(digits=1),
         seller_id=seller_id,
         s3_path=fake.uri_path(),
     )
+
+
 @pytest.fixture(scope="session")
 def generate_random_seller_info() -> SellerInfoCreate:
     return SellerInfoCreate(
@@ -56,7 +63,7 @@ def generate_random_seller_info() -> SellerInfoCreate:
         email=fake.email(),
         phone=fake.phone_number() if fake.boolean(chance_of_getting_true=50) else None,
         address=fake.address() if fake.boolean(chance_of_getting_true=50) else None,
-        zipcode=FIXED_ZIPCODE
+        zipcode=FIXED_ZIPCODE,
     )
 
 
@@ -69,6 +76,7 @@ def seller(session: Session, generate_random_seller_info) -> SellerInfo:
     session.commit()
     return seller
 
+
 # @pytest.fixture(scope="session")
 # def buyer(session: Session, generate_random_buyer_info) -> BuyerInfo:
 #     buyer_info = generate_random_buyer_info
@@ -77,7 +85,10 @@ def seller(session: Session, generate_random_seller_info) -> SellerInfo:
 #     session.commit()
 #     return buyer
 
-def test_search_should_only_return_active_dish(session: Generator[Session, None, None], seller: SellerInfo) -> None:
+
+def test_search_should_only_return_active_dish(
+    session: Generator[Session, None, None], seller: SellerInfo
+) -> None:
     url = f"{BASE_URL}/search"
     dish_create = generate_random_dish(seller.id)
     dish_instance = Dish(**_convert_uuids_to_strings(dish_create.dict()))
@@ -85,7 +96,7 @@ def test_search_should_only_return_active_dish(session: Generator[Session, None,
     session.commit()
     session.close()
 
-    params = {"zip_code": FIXED_ZIPCODE, "seller_name": ''}
+    params = {"zip_code": FIXED_ZIPCODE, "seller_name": ""}
     response = requests.get(url, params=params)
     json_response = response.json()
     for item in json_response:
@@ -94,5 +105,3 @@ def test_search_should_only_return_active_dish(session: Generator[Session, None,
     # Remove the dish with delete
     dish_instance.status = "SOFT_DELETE"
     session.commit()
-
-

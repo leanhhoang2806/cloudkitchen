@@ -11,6 +11,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
+from sqlalchemy import CheckConstraint
 
 
 # revision identifiers, used by Alembic.
@@ -137,6 +138,12 @@ def upgrade():
         sa.Column("buyer_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("dish_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("seller_id", postgresql.UUID(as_uuid=True), nullable=False),
+        sa.Column(
+            "quantities",
+            sa.Integer,
+            CheckConstraint("quantities > 0 AND quantities < 100"),
+            nullable=False,
+        ),
         sa.Column(
             "status",
             sa.String(50),
