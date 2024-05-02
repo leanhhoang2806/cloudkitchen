@@ -71,7 +71,7 @@ class ChatInfo(Base):
 
 class Dish(Base):
     __tablename__ = "Dish"
-    __table_args__ = (CheckConstraint("(quantities > 0) AND (quantities < 100)"),)
+    __table_args__ = (CheckConstraint("(quantities >= 0) AND (quantities < 100)"),)
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     name = Column(String(255), nullable=False)

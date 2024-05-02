@@ -76,7 +76,7 @@ def generate_random_seller_info() -> SellerInfoCreate:
     return SellerInfoCreate(
         name=fake.name(),
         email=fake.email(),
-        phone=fake.phone_number() if fake.boolean(chance_of_getting_true=50) else None,
+        phone=fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None,
         address=fake.address() if fake.boolean(chance_of_getting_true=50) else None,
         zipcode=FIXED_ZIPCODE,
     )
@@ -91,9 +91,7 @@ def generate_random_buyer_info() -> BuyerInfoCreate:
     )
 
 
-def test_search_should_only_return_active_dish(
-    session: Generator[Session, None, None]
-) -> None:
+def test_search_should_only_return_active_dish(session: Session) -> None:
     url = f"{BASE_URL}/search"
     seller_info: SellerInfo = generate_random_seller_info()
 
@@ -125,7 +123,7 @@ def test_search_should_only_return_active_dish(
         assert item["status"] == "ACTIVE"
 
 
-def test_dish_create_route(session: Generator[Session, None, None]):
+def test_dish_create_route(session: Session):
     url = f"{BASE_URL}/dish"
     seller_info: SellerInfoCreate = generate_random_seller_info()
 
@@ -148,9 +146,7 @@ def test_dish_create_route(session: Generator[Session, None, None]):
     assert "quantities" in response.json()
 
 
-def test_dish_quantities_should_reduce_after_ordering(
-    session: Generator[Session, None, None]
-):
+def test_dish_quantities_should_reduce_after_ordering(session: Session):
     dish_url = f"{BASE_URL}/dish"
     order_url = f"{BASE_URL}/order"
     dish_quantities = fake.random_number(digits=1) + 1
@@ -192,5 +188,8 @@ def test_dish_quantities_should_reduce_after_ordering(
 
     response = requests.post(order_url, json=order_payload, headers=headers)
 
-    assert response.status_code == 200
-    
+    get_dish: Dish = (
+        session.query(Dish).filter(Dish.id == post_dish_response["id"]).first()
+    )
+
+    assert dish_quantities - get_dish.quantities == 1

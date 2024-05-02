@@ -106,7 +106,7 @@ def upgrade():
         sa.Column(
             "quantities",
             sa.Integer,
-            CheckConstraint("quantities > 0 AND quantities < 100"),
+            CheckConstraint("quantities >= 0 AND quantities < 100"),
             nullable=False,
         ),
         sa.Column(
