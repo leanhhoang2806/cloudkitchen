@@ -87,3 +87,9 @@ class Generic400Error(Exception):
     def __init__(self, message="Generic400") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class DishDoesNotHaveEnoughToSell(Exception):
+    def __init__(self, message="DishDoesNotHaveEnoughToSell") -> None:
+        self.message = message
+        super().__init__(self.message)

@@ -14,6 +14,16 @@ class DishDAO(GenericDAO):
         super().__init__(Dish)
 
     @provide_session
+    def update_dish_quantities(
+        self, dish_id: UUID, quantities: int, session: Session
+    ) -> Dish:
+        return (
+            session.query(Dish)
+            .filter(Dish.id == str(dish_id))
+            .update({Dish.quantities: Dish.quantities - quantities})
+        )
+
+    @provide_session
     def get_by_seller_id(self, seller_id: UUID, session: Session):
         return (
             session.query(Dish)

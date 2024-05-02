@@ -32,3 +32,6 @@ class DishManager(GenericManager):
 
     def soft_delete(self, dish_id: UUID) -> Optional[Dish]:
         return self.dao.soft_delete(dish_id)
+
+    def update_dish_quantities(self, dish_id: UUID, quantities: int) -> Dish:
+        return self.dao.update_dish_quantities(dish_id, quantities)

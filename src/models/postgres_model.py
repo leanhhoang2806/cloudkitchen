@@ -9,6 +9,7 @@ from sqlalchemy import (
     Text,
     text,
     Boolean,
+    CheckConstraint,
 )
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
@@ -70,6 +71,7 @@ class ChatInfo(Base):
 
 class Dish(Base):
     __tablename__ = "Dish"
+    __table_args__ = (CheckConstraint("(quantities > 0) AND (quantities < 100)"),)
 
     id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
     name = Column(String(255), nullable=False)
@@ -77,6 +79,7 @@ class Dish(Base):
     price = Column(Numeric(10, 2), nullable=False)
     s3_path = Column(String(255))
     seller_id = Column(ForeignKey("Seller_Info.id"), nullable=False)
+    quantities = Column(Integer, nullable=False)
     is_featured = Column(Boolean, server_default=text("false"))
     status = Column(String(50), server_default=text("'ACTIVE'::character varying"))
     created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))

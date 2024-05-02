@@ -9,6 +9,7 @@ from src.errors.custom_exceptions import (
     NotAllowedToUploadThisImage,
     MaximumFeaturedLimit,
     Generic400Error,
+    DishDoesNotHaveEnoughToSell,
 )
 import logging
 
@@ -32,6 +33,7 @@ def handle_exceptions(func):
                     NotAllowedToUploadThisImage,
                     MaximumFeaturedLimit,
                     Generic400Error,
+                    DishDoesNotHaveEnoughToSell,
                 ]
             )
 

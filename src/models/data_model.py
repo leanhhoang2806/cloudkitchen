@@ -11,7 +11,6 @@ class BuyerInfoCreate(BaseModel):
     email: str
     phone: Optional[str]
     address: Optional[str]
-    request_email: str
 
 
 class BuyerInfoUpdate(BaseModel):
@@ -43,6 +42,7 @@ class DishCreate(BaseModel):
     price: float
     seller_id: UUID
     s3_path: str
+    quantities: PositiveInt
 
 
 class DishUpdate(BaseModel):
@@ -55,6 +55,7 @@ class DishUpdate(BaseModel):
 class OrderCreate(BaseModel):
     buyer_id: UUID
     dish_id: List[UUID]
+    quantities: List[PositiveInt]
 
 
 class SingleOrderCreate(BaseModel):

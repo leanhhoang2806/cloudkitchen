@@ -5,7 +5,11 @@ from uuid import UUID
 from typing import Optional, List
 from src.models.data_model import OrderCreate, SingleOrderCreate
 from src.managers.all_managers import ALL_MANAGER
-from src.errors.custom_exceptions import BuyerMustUpdateAddressBeforeOrderError
+from src.errors.custom_exceptions import (
+    BuyerMustUpdateAddressBeforeOrderError,
+    DishDoesNotHaveEnoughToSell,
+)
+import logging
 
 dish_manager = ALL_MANAGER.dish_manager
 buyer_manager = ALL_MANAGER.buyer_manager
@@ -21,7 +25,14 @@ class OrderManager(GenericManager):
         seller_id_by_dish: List[Dish] = [
             dish_manager.get(dish_id) for dish_id in order_create.dish_id
         ]
-        return [
+        requested_dish_quantities_map = {
+            str(dish_id): count
+            for dish_id, count in zip(order_create.dish_id, order_create.quantities)
+        }
+        for dish in seller_id_by_dish:
+            if dish.quantities < requested_dish_quantities_map[str(dish.id)]:
+                raise DishDoesNotHaveEnoughToSell
+        result = [
             self.dao.create(
                 SingleOrderCreate(
                     dish_id=order_create.dish_id[index],
@@ -31,6 +42,13 @@ class OrderManager(GenericManager):
             )
             for index in range(len(order_create.dish_id))
         ]
+        logging.error("result")
+        logging.error(result)
+
+        # Reduce quantities
+        for dish_id, requested_quantities in requested_dish_quantities_map.items():
+            dish_manager.update_dish_quantities(dish_id, requested_quantities)
+        return result
 
     def get_by_buyer_id(self, buyer_id: UUID) -> Optional[Order]:
         return self.dao.get_by_buyer_id(buyer_id)

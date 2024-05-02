@@ -104,6 +104,12 @@ def upgrade():
         sa.Column("s3_path", sa.String(255), nullable=True),
         sa.Column("seller_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column(
+            "quantities",
+            sa.Integer,
+            CheckConstraint("quantities > 0 AND quantities < 100"),
+            nullable=False,
+        ),
+        sa.Column(
             "is_featured", sa.Boolean(), server_default=sa.text("FALSE"), nullable=True
         ),
         sa.Column("status", sa.String(50), server_default="ACTIVE", nullable=True),
@@ -138,12 +144,6 @@ def upgrade():
         sa.Column("buyer_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("dish_id", postgresql.UUID(as_uuid=True), nullable=False),
         sa.Column("seller_id", postgresql.UUID(as_uuid=True), nullable=False),
-        sa.Column(
-            "quantities",
-            sa.Integer,
-            CheckConstraint("quantities > 0 AND quantities < 100"),
-            nullable=False,
-        ),
         sa.Column(
             "status",
             sa.String(50),
