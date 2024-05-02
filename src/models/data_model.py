@@ -3,6 +3,7 @@ from typing import Optional, List, Dict
 from uuid import UUID
 import uuid
 from datetime import datetime
+from decimal import Decimal
 
 
 class BuyerInfoCreate(BaseModel):
@@ -219,3 +220,24 @@ class UserPermission(BaseModel):
 
 class UserPermissionUpdate(BaseModel):
     permissions: dict
+
+
+class DishInformationForExternal(BaseModel):
+    id: UUID
+    name: str
+    description: Optional[str]
+    price: Decimal
+    s3_path: Optional[str]
+    quantities: int
+    is_featured: bool
+    status: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class OrderInformationForExternal(BaseModel):
+    id: UUID
+    dish_id: UUID
+    status: str
+    created_at: datetime
+    updated_at: datetime

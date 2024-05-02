@@ -39,3 +39,5 @@ sqlacodegen postgresql://your_user:your_password@localhost:5432/popo_24
 # Notes:
 1. To manage UUID of a system. it's better to generate it at the application level. don't generate it at the database level. to avoid the case where a commit needs to happen then using this UUID in other tables, the commits will lose the transaction.
 2. Secondly, database is strictly for `storing` data, no logic should happen to store data. Just a plain data, get ready to write
+
+3. For security purposes, never shown any other UUID except for the UUID of the person who made a request. 

@@ -13,7 +13,7 @@ Base = declarative_base()
 
 BASE_URL = "http://localhost:8000/api/v1"
 FIXED_ZIPCODE = "75025"
-TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE2TDJHLTkyWmFJN3pzbjFGTlZhWCJ9.eyJodHRwczovL215YXBwLmV4YW1wbGUuY29tL2VtYWlsIjoiaG9hbmd0ZWNoYWNvdW50QGdtYWlsLmNvbSIsImh0dHBzOi8vbXlhcHAuZXhhbXBsZS5jb20vbmFtZSI6IkhvYW5nIExlIiwiaXNzIjoiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDkyNDkxNzY5MDc4NjYxNDExODkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTF3ZWN2anluenF5dzc4ZzAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcxNDU0NTY4NSwiZXhwIjoxNzE0NjMyMDg1LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiUE0zRzlZQXZxWXZNRUtHT1A1aHRDcFpkNWlHOFZJeHoifQ.ZRkrmMBozSJ9kKAQxkfDJl8svxBE8LjiaG-PIV4VB19drYEKoBPocjrmbS7QiSdcKGM2U4q-XIi-bo7TEJ5Zz729BZ5ek1EnJlXK9fodC1zGW_YScb-NA9CMPFia6AZdStFjUbEzumSQ1v0AWJGQoxDDF4WfqtcoCFDBVzROdjlRhGftO_hcPNEirpeh_zWwXp2mpuNbGXLLZCR6z4x6nKaNv1l0bBoDy3O-NqdP77620nsBnpqWsSyZRZJDffTzYO3FGO2JpGqixgQAhX6FfQyRMjWZjm8iZj8H1SHZ_tcwOQeeOuldYBaLULdV_Gb9jeS3eT7-QegqOt2ioSvqdA"
+TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE2TDJHLTkyWmFJN3pzbjFGTlZhWCJ9.eyJodHRwczovL215YXBwLmV4YW1wbGUuY29tL2VtYWlsIjoiaG9hbmd0ZWNoYWNvdW50QGdtYWlsLmNvbSIsImh0dHBzOi8vbXlhcHAuZXhhbXBsZS5jb20vbmFtZSI6IkhvYW5nIExlIiwiaXNzIjoiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDkyNDkxNzY5MDc4NjYxNDExODkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTF3ZWN2anluenF5dzc4ZzAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcxNDY0MTYxMSwiZXhwIjoxNzE0NzI4MDExLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiUE0zRzlZQXZxWXZNRUtHT1A1aHRDcFpkNWlHOFZJeHoifQ.cmvf-fbe25hXWs1YeK-ACaD8igBxxRe_9lBaHg86r6R_xSHZZp4tVSrjfFuI36dBQh8Z5qZ_kb6UKdmWvkMMUfdDrx3yszL_aPLcBMToQbGjHrbhE3iEhwN-Ozt45XrRzLg1Hx9g62XTmohgHB3JJFuN_WhmGDGDz7YIn2ERCnw5KDyDKkF0c2A48vwnKI7Qk10qit7bsm3LXeEaBvBTuh7CHSg9jx36mpDWAEp75Retg929VelAZqmNk2vOh0T4CAj8AWY2Cz82QiNuYHFnfdZZqCcaE4-SwJjeHI4X-GOmlvMt8GWBQt5O-pHLw2_KSQIq85NPf7bdM9W_kCVCSw"
 headers = {"Authorization": f"Bearer {TOKEN}"}
 fake = Faker()
 
@@ -68,7 +68,7 @@ def generate_random_dish(seller_id: UUID) -> DishCreate:
         price=fake.random_number(digits=1),
         seller_id=str(seller_id),
         s3_path=fake.uri_path(),
-        quantities=fake.random_number(digits=1),
+        quantities=fake.random_number(digits=1) + 1,
     )
 
 
@@ -76,7 +76,9 @@ def generate_random_seller_info() -> SellerInfoCreate:
     return SellerInfoCreate(
         name=fake.name(),
         email=fake.email(),
-        phone=fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None,
+        phone=(
+            fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None
+        ),
         address=fake.address() if fake.boolean(chance_of_getting_true=50) else None,
         zipcode=FIXED_ZIPCODE,
     )
@@ -86,7 +88,7 @@ def generate_random_buyer_info() -> BuyerInfoCreate:
     return BuyerInfoCreate(
         name=fake.name(),
         email=fake.email(),
-        phone=fake.phone_number() if fake.boolean(chance_of_getting_true=50) else None,
+        phone=fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None,
         address=fake.address(),
     )
 
@@ -193,3 +195,80 @@ def test_dish_quantities_should_reduce_after_ordering(session: Session):
     )
 
     assert dish_quantities - get_dish.quantities == 1
+
+
+def test_make_sure_no_seller_id_return_on_GET_dish(session: Session):
+    dish_url = f"{BASE_URL}/dish"
+    dish_quantities = fake.random_number(digits=1) + 1
+    seller_info: SellerInfo = generate_random_seller_info()
+
+    seller = SellerInfo(**_convert_uuids_to_strings(seller_info.dict()))
+    session.add(seller)
+    session.commit()
+    session.refresh(seller)
+    payload = {
+        "name": fake.word(),
+        "description": (
+            fake.sentence() if fake.boolean(chance_of_getting_true=50) else None
+        ),
+        "price": fake.random_number(digits=1) / 10,
+        "seller_id": str(seller.id),
+        "s3_path": fake.uri_path(),
+        "quantities": dish_quantities,
+    }
+
+    response = requests.post(dish_url, json=payload, headers=headers)
+    post_dish_response = response.json()
+
+    assert "seller_id" not in post_dish_response
+
+
+def test_no_seller_id_or_buyer_id_in_GET_order(session: Session):
+    dish_url = f"{BASE_URL}/dish"
+    order_url = f"{BASE_URL}/order"
+    dish_quantities = fake.random_number(digits=1) + 1
+    seller_info: SellerInfo = generate_random_seller_info()
+
+    seller = SellerInfo(**_convert_uuids_to_strings(seller_info.dict()))
+    session.add(seller)
+    session.commit()
+    session.refresh(seller)
+    payload = {
+        "name": fake.word(),
+        "description": (
+            fake.sentence() if fake.boolean(chance_of_getting_true=50) else None
+        ),
+        "price": fake.random_number(digits=1) / 10,
+        "seller_id": str(seller.id),
+        "s3_path": fake.uri_path(),
+        "quantities": dish_quantities,
+    }
+
+    response = requests.post(dish_url, json=payload, headers=headers)
+    post_dish_response = response.json()
+
+    assert response.status_code == 200
+
+    # create a buyer
+    buyer_create = generate_random_buyer_info()
+    buyer_inserted = BuyerInfo(**_convert_uuids_to_strings(buyer_create.dict()))
+    session.add(buyer_inserted)
+    session.commit()
+    session.refresh(buyer_inserted)
+
+    # create an order
+    order_payload = {
+        "buyer_id": buyer_inserted.id,
+        "dish_id": [post_dish_response["id"]],
+        "quantities": [1],
+    }
+
+    response = requests.post(order_url, json=order_payload, headers=headers)
+    order_response = response.json()
+
+    print(order_response)
+
+    get_response = requests.get(f"{order_url}/{order_response[0]['id']}")
+    get_json_response = get_response.json()
+    assert "seller_id" not in get_json_response
+    assert "buyer_id" not in get_json_response
