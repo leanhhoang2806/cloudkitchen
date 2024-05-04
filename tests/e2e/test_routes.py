@@ -88,7 +88,9 @@ def generate_random_buyer_info() -> BuyerInfoCreate:
     return BuyerInfoCreate(
         name=fake.name(),
         email=fake.email(),
-        phone=fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None,
+        phone=(
+            fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None
+        ),
         address=fake.address(),
     )
 

@@ -89,7 +89,7 @@ class DishDAO(GenericDAO):
     ) -> Optional[List[Dish]]:
         zipcodeds_str = [str(zipcode) for zipcode in zipcodes]
         dishes = (
-            session.query(Dish)
+            session.query(Dish, SellerInfo)
             .join(SellerInfo)
             .filter(SellerInfo.zipcode.in_(zipcodeds_str), Dish.status == Status.ACTIVE)
             .order_by(Dish.updated_at.desc())

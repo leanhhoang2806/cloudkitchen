@@ -2,28 +2,13 @@ from fastapi import Depends, Query
 from src.validations.validators import validate_token
 from src.managers.dish_manager import DishManager
 from src.models.data_model import DishCreate, DishInformationForExternal
-from src.models.postgres_model import Dish
+from src.models.data_conversion import map_to_dish_external
 from uuid import UUID
 from src.routes.custom_api_router import CustomAPIRouter
 from typing import Optional, List
 
 router = CustomAPIRouter()
 dish_manager = DishManager()
-
-
-def map_to_dish_external(dish_from_db: Dish) -> DishInformationForExternal:
-    return DishInformationForExternal(
-        id=dish_from_db.id,
-        name=dish_from_db.name,
-        description=dish_from_db.description,
-        price=dish_from_db.price,
-        s3_path=dish_from_db.s3_path,
-        quantities=dish_from_db.quantities,
-        is_featured=dish_from_db.is_featured,
-        status=dish_from_db.status,
-        created_at=dish_from_db.created_at,
-        updated_at=dish_from_db.updated_at,
-    )
 
 
 @router.get(

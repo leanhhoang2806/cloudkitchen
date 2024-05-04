@@ -225,6 +225,7 @@ class UserPermissionUpdate(BaseModel):
 class DishInformationForExternal(BaseModel):
     id: UUID
     name: str
+    seller_name: Optional[str]
     description: Optional[str]
     price: Decimal
     s3_path: Optional[str]
@@ -241,3 +242,4 @@ class OrderInformationForExternal(BaseModel):
     status: str
     created_at: datetime
     updated_at: datetime
+    address: Optional[str]
