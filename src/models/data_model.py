@@ -243,3 +243,11 @@ class OrderInformationForExternal(BaseModel):
     created_at: datetime
     updated_at: datetime
     address: Optional[str]
+
+
+class SellerApplicationCreate(BaseModel):
+    id: UUID = Field(default_factory=uuid.uuid4)
+    email: str
+    address: Optional[str]
+    s3_path: Optional[str]
+    status: str = "pending"

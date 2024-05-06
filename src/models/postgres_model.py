@@ -10,6 +10,7 @@ from sqlalchemy import (
     text,
     Boolean,
     CheckConstraint,
+    Enum,
 )
 from sqlalchemy.dialects.postgresql import UUID, JSON
 from sqlalchemy.orm import relationship
@@ -173,6 +174,18 @@ class Purchase(Base):
     order = relationship("Order")
 
 
+class SellerApplication(Base):
+    __tablename__ = "Seller_Application"
+
+    id = Column(UUID, primary_key=True, server_default=text("uuid_generate_v4()"))
+    email = Column(String(255), nullable=False, unique=True)
+    address = Column(String(255))
+    s3_path = Column(String(255))
+    status = Column(Enum("approved", "denied", "pending", name="StatusEnum"))
+    created_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+    updated_at = Column(DateTime, server_default=text("CURRENT_TIMESTAMP"))
+
+
 SellerInfoPydantic = sqlalchemy_to_pydantic(SellerInfo)
 DishPydantic = sqlalchemy_to_pydantic(Dish)
 BuyerPydantic = sqlalchemy_to_pydantic(BuyerInfo)
@@ -183,3 +196,4 @@ DiscountedDishPydantic = sqlalchemy_to_pydantic(DiscountedDish)
 ChatInfoPydantic = sqlalchemy_to_pydantic(ChatInfo)
 DishReviewPydantic = sqlalchemy_to_pydantic(DishReview)
 PermissionPydantic = sqlalchemy_to_pydantic(Permission)
+SellerApplicationPydantic = sqlalchemy_to_pydantic(SellerApplication)

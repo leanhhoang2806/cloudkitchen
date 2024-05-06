@@ -12,6 +12,7 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import CheckConstraint
+from sqlalchemy import Enum
 
 
 # revision identifiers, used by Alembic.
@@ -24,6 +25,39 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade():
     # Create the extension if not exists
     op.execute('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
+
+    # Create Seller_Info table
+    op.create_table(
+        "Seller_Application",
+        sa.Column(
+            "id",
+            postgresql.UUID(as_uuid=True),
+            server_default=sa.text("uuid_generate_v4()"),
+            nullable=False,
+        ),
+        sa.Column("email", sa.String(255), nullable=False),
+        sa.Column("address", sa.String(255), nullable=True),
+        sa.Column("s3_path", sa.String(255), nullable=True),
+        sa.Column(
+            "status",
+            Enum("approved", "denied", "pending", name="StatusEnum"),
+            nullable=True,
+        ),
+        sa.Column(
+            "created_at",
+            sa.TIMESTAMP,
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=True,
+        ),
+        sa.Column(
+            "updated_at",
+            sa.TIMESTAMP,
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=True,
+        ),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("email"),
+    )
 
     # Create Seller_Info table
     op.create_table(

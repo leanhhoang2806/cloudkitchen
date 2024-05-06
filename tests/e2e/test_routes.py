@@ -13,7 +13,7 @@ Base = declarative_base()
 
 BASE_URL = "http://localhost:8000/api/v1"
 FIXED_ZIPCODE = "75025"
-TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE2TDJHLTkyWmFJN3pzbjFGTlZhWCJ9.eyJodHRwczovL215YXBwLmV4YW1wbGUuY29tL2VtYWlsIjoiaG9hbmd0ZWNoYWNvdW50QGdtYWlsLmNvbSIsImh0dHBzOi8vbXlhcHAuZXhhbXBsZS5jb20vbmFtZSI6IkhvYW5nIExlIiwiaXNzIjoiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDkyNDkxNzY5MDc4NjYxNDExODkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTF3ZWN2anluenF5dzc4ZzAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcxNDY0MTYxMSwiZXhwIjoxNzE0NzI4MDExLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiUE0zRzlZQXZxWXZNRUtHT1A1aHRDcFpkNWlHOFZJeHoifQ.cmvf-fbe25hXWs1YeK-ACaD8igBxxRe_9lBaHg86r6R_xSHZZp4tVSrjfFuI36dBQh8Z5qZ_kb6UKdmWvkMMUfdDrx3yszL_aPLcBMToQbGjHrbhE3iEhwN-Ozt45XrRzLg1Hx9g62XTmohgHB3JJFuN_WhmGDGDz7YIn2ERCnw5KDyDKkF0c2A48vwnKI7Qk10qit7bsm3LXeEaBvBTuh7CHSg9jx36mpDWAEp75Retg929VelAZqmNk2vOh0T4CAj8AWY2Cz82QiNuYHFnfdZZqCcaE4-SwJjeHI4X-GOmlvMt8GWBQt5O-pHLw2_KSQIq85NPf7bdM9W_kCVCSw"
+TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE2TDJHLTkyWmFJN3pzbjFGTlZhWCJ9.eyJodHRwczovL215YXBwLmV4YW1wbGUuY29tL2VtYWlsIjoiaG9hbmd0ZWNoYWNvdW50QGdtYWlsLmNvbSIsImh0dHBzOi8vbXlhcHAuZXhhbXBsZS5jb20vbmFtZSI6IkhvYW5nIExlIiwiaXNzIjoiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDkyNDkxNzY5MDc4NjYxNDExODkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTF3ZWN2anluenF5dzc4ZzAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcxNDk3MDU1NiwiZXhwIjoxNzE1MDU2OTU2LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiUE0zRzlZQXZxWXZNRUtHT1A1aHRDcFpkNWlHOFZJeHoifQ.OD5rFRYHLQzRIafvCXOm1q4uc9JIJaGg4U79g7fWGav9d3r3qDmAJfCFvNZqK1RnWehmslQqlCSxJeTnl8xqvBmRuR0QRdwCl8hwEjLHTgq6-NOn6Fzhkr6phLGxAvj1gnZERnhJEOSvugozclA6DVF1nBcdzNlAGJnHNTls_nz1sKoi_E5Izn7V-941KcsEJv1mp-QaDOnzjL2WrYIdTiaSMWviqR6sxXvEcFMhj8C8ZiMuT8SYTULwwt0syBgWBQ2IZQNL5K5LOmBMGDwFh-jbNoWG-sMd8YCit3QBCr6mTJDUKgDCD8pKzfvlaUyq1jf0aRKewxf5dpUOJ-lPTA"
 headers = {"Authorization": f"Bearer {TOKEN}"}
 fake = Faker()
 
@@ -268,9 +268,25 @@ def test_no_seller_id_or_buyer_id_in_GET_order(session: Session):
     response = requests.post(order_url, json=order_payload, headers=headers)
     order_response = response.json()
 
-    print(order_response)
-
     get_response = requests.get(f"{order_url}/{order_response[0]['id']}")
     get_json_response = get_response.json()
     assert "seller_id" not in get_json_response
     assert "buyer_id" not in get_json_response
+
+
+def test_seller_application_endpoint(session: Session):
+    # create payload
+    url = f"{BASE_URL}/seller-application"
+    email = fake.email()
+    payload = {
+        "email": email,
+        "address": fake.address() if fake.boolean(chance_of_getting_true=50) else None,
+        "s3_path": "test",
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    assert response.status_code == 200
+
+    get_response = requests.get(f"{url}/seller/{email}", headers=headers)
+    get_response_json = get_response.json()
+
+    assert get_response_json["email"] == email
