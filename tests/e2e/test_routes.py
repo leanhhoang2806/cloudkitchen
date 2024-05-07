@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from src.models.data_model import DishCreate, SellerInfoCreate, BuyerInfoCreate
-from src.models.postgres_model import Dish, SellerInfo, BuyerInfo
+from src.models.postgres_model import Dish, SellerInfo, BuyerInfo, SellerApplication
 from uuid import UUID
 from faker import Faker
 from typing import Generator
@@ -143,7 +143,7 @@ def test_dish_create_route(session: Session):
         "price": fake.random_number(digits=1) / 10,
         "seller_id": str(seller.id),
         "s3_path": fake.uri_path(),
-        "quantities": fake.random_number(digits=1),
+        "quantities": fake.random_number(digits=1) + 1,
     }
 
     response = requests.post(url, json=payload, headers=headers)
@@ -290,3 +290,46 @@ def test_seller_application_endpoint(session: Session):
     get_response_json = get_response.json()
 
     assert get_response_json["email"] == email
+
+
+def test_create_seller_only_application_approved(session: Session):
+    seller_url = f"{BASE_URL}/seller_info"
+    email = "hoangtechacount@gmail.com"
+    seller_payload = {
+        "name": fake.name(),
+        "email": email,
+        "phone": fake.phone_number(),
+        "address": fake.address()[:5],
+        "zipcode": FIXED_ZIPCODE,
+    }
+
+    seller_response = requests.post(seller_url, json=seller_payload, headers=headers)
+    assert seller_response.status_code == 400
+
+    # create an application
+    application_url = f"{BASE_URL}/seller-application"
+    application_payload = {
+        "email": email,
+        "address": (
+            fake.address()[:5] if fake.boolean(chance_of_getting_true=50) else None
+        ),
+        "s3_path": "test",
+    }
+
+    requests.post(application_url, json=application_payload, headers=headers)
+    assert (
+        session.query(SellerApplication)
+        .filter(SellerApplication.email == email)
+        .count()
+        == 1
+    )
+
+    # Update email manually, do the same in prod
+    session.query(SellerApplication).filter(SellerApplication.email == email).update(
+        {"status": "approved"}
+    )
+    session.commit()
+
+    # post the request againt
+    seller_response = requests.post(seller_url, json=seller_payload, headers=headers)
+    assert seller_response.status_code == 200

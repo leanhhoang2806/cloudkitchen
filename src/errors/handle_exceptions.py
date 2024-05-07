@@ -10,6 +10,7 @@ from src.errors.custom_exceptions import (
     MaximumFeaturedLimit,
     Generic400Error,
     DishDoesNotHaveEnoughToSell,
+    SellerApplicationHasNotApproved,
 )
 import logging
 
@@ -34,6 +35,7 @@ def handle_exceptions(func):
                     MaximumFeaturedLimit,
                     Generic400Error,
                     DishDoesNotHaveEnoughToSell,
+                    SellerApplicationHasNotApproved,
                 ]
             )
 

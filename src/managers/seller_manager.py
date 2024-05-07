@@ -2,15 +2,18 @@ from fastapi import HTTPException, status
 from src.daos.Seller_DAO import SellerInfoDAO
 from src.managers.permission_manager import PermissionManager
 from src.managers.generic_manager import GenericManager
+from src.managers.seller_application_manager import SellerApplicationManager
 from typing import Optional
 from src.models.postgres_model import SellerInfo
 from src.models.data_model import SellerInfoCreate
 from src.managers.payment_manager import PaymentManager
 from src.models.data_model import PaymentCreate
+from src.errors.custom_exceptions import SellerApplicationHasNotApproved
 from uuid import UUID
 
 
 permission_manager = PermissionManager()
+seller_application_manager = SellerApplicationManager()
 
 
 class SellerInfoManager(GenericManager):
@@ -33,6 +36,9 @@ class SellerInfoManager(GenericManager):
     def create_with_payment_limit(
         self, seller_info_data: SellerInfoCreate
     ) -> SellerInfo:
+        if not self.does_seller_application_approved(seller_info_data.email):
+            raise SellerApplicationHasNotApproved
+
         seller = self.create(seller_info_data)
         paymentCreate = PaymentCreate(
             email=seller_info_data.email,
@@ -46,3 +52,7 @@ class SellerInfoManager(GenericManager):
 
     def get_seller_name_by_dish_id(self, dish_id: UUID) -> Optional[SellerInfo]:
         return self.dao.get_seller_name_by_dish_id(dish_id)
+
+    def does_seller_application_approved(self, email: str) -> bool:
+        application = seller_application_manager.get_by_email(email)
+        return application.status == "approved" if application else False

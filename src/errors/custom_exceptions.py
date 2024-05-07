@@ -93,3 +93,9 @@ class DishDoesNotHaveEnoughToSell(Exception):
     def __init__(self, message="DishDoesNotHaveEnoughToSell") -> None:
         self.message = message
         super().__init__(self.message)
+
+
+class SellerApplicationHasNotApproved(Exception):
+    def __init__(self, message="SellerApplicationHasNotApproved") -> None:
+        self.message = message
+        super().__init__(self.message)
