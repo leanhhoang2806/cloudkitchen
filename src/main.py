@@ -15,6 +15,7 @@ from src.routes import (
     # chat_router,
     dish_review_router,
     seller_application_router,
+    ops_router,
 )
 from alembic.config import Config
 from alembic import command
@@ -56,3 +57,4 @@ app.include_router(discounted_dish_router.router, prefix="/api/v1")
 # app.include_router(chat_router.router, prefix="/api/v1")
 app.include_router(dish_review_router.router, prefix="/api/v1")
 app.include_router(seller_application_router.router, prefix="/api/v1")
+app.include_router(ops_router.router, prefix="/api/v1")

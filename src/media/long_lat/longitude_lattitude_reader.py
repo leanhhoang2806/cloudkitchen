@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
-from src.logger.logger import initialize_logger
-
-
-logger = initialize_logger()
+import logging
 
 
 class ZipcodeSearchReader:
@@ -43,7 +40,7 @@ class ZipcodeSearchReader:
 
         if target_lat is None or target_lon is None:
             # change this to logging
-            print("Target zip code not found in the dataset")
+            logging.error("Target zip code not found in the dataset")
             return
 
         # Calculate distance from target zip to all other zip codes

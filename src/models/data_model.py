@@ -251,3 +251,8 @@ class SellerApplicationCreate(BaseModel):
     address: Optional[str]
     s3_path: Optional[str]
     status: str = "pending"
+
+
+class UpdateSellerApplication(BaseModel):
+    application_id: UUID
+    status: str

@@ -13,7 +13,7 @@ Base = declarative_base()
 
 BASE_URL = "http://localhost:8000/api/v1"
 FIXED_ZIPCODE = "75025"
-TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE2TDJHLTkyWmFJN3pzbjFGTlZhWCJ9.eyJodHRwczovL215YXBwLmV4YW1wbGUuY29tL2VtYWlsIjoiaG9hbmd0ZWNoYWNvdW50QGdtYWlsLmNvbSIsImh0dHBzOi8vbXlhcHAuZXhhbXBsZS5jb20vbmFtZSI6IkhvYW5nIExlIiwiaXNzIjoiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDkyNDkxNzY5MDc4NjYxNDExODkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTF3ZWN2anluenF5dzc4ZzAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcxNDk3MDU1NiwiZXhwIjoxNzE1MDU2OTU2LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiUE0zRzlZQXZxWXZNRUtHT1A1aHRDcFpkNWlHOFZJeHoifQ.OD5rFRYHLQzRIafvCXOm1q4uc9JIJaGg4U79g7fWGav9d3r3qDmAJfCFvNZqK1RnWehmslQqlCSxJeTnl8xqvBmRuR0QRdwCl8hwEjLHTgq6-NOn6Fzhkr6phLGxAvj1gnZERnhJEOSvugozclA6DVF1nBcdzNlAGJnHNTls_nz1sKoi_E5Izn7V-941KcsEJv1mp-QaDOnzjL2WrYIdTiaSMWviqR6sxXvEcFMhj8C8ZiMuT8SYTULwwt0syBgWBQ2IZQNL5K5LOmBMGDwFh-jbNoWG-sMd8YCit3QBCr6mTJDUKgDCD8pKzfvlaUyq1jf0aRKewxf5dpUOJ-lPTA"
+TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjE2TDJHLTkyWmFJN3pzbjFGTlZhWCJ9.eyJodHRwczovL215YXBwLmV4YW1wbGUuY29tL2VtYWlsIjoiaG9hbmd0ZWNoYWNvdW50QGdtYWlsLmNvbSIsImh0dHBzOi8vbXlhcHAuZXhhbXBsZS5jb20vbmFtZSI6IkhvYW5nIExlIiwiaXNzIjoiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMDkyNDkxNzY5MDc4NjYxNDExODkiLCJhdWQiOlsiaHR0cHM6Ly9kZXYtMXdlY3ZqeW56cXl3NzhnMC51cy5hdXRoMC5jb20vYXBpL3YyLyIsImh0dHBzOi8vZGV2LTF3ZWN2anluenF5dzc4ZzAudXMuYXV0aDAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcxNTEwNTA5NCwiZXhwIjoxNzE1MTkxNDk0LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiUE0zRzlZQXZxWXZNRUtHT1A1aHRDcFpkNWlHOFZJeHoifQ.S2lvpk6T7zINjfCPiTl_Rgcqcm4sFWRFoVQimdgaw09_zGIsUV7EFKorSnHK8xcaLD6rm78IqPkhXEFfNMvIXy9k9pVWEjGmhYKQ07O0AWXCOzzrxObCm2EXT5tuTE1Tr_e1p1f8ecrlradfeDR4Mg4JYoUFkoI10XTR1gHFLNrIOoQTDuPF2-cI2WjPM2SUbUf5au7VDvj2bgnO3vlPsg-DWNIyV5LadiDoPjILGoPJtNrcuv9tQqDTuDeW4uYmk4NCYylCt5jQlXOVjKagUSEli-cUbXwKo9O9CopwkL20-Yyqz8IqL8RylkZ5DxEtQPQ4wWJUAHDMq-9iXYaQKA"
 headers = {"Authorization": f"Bearer {TOKEN}"}
 fake = Faker()
 
@@ -79,7 +79,9 @@ def generate_random_seller_info() -> SellerInfoCreate:
         phone=(
             fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None
         ),
-        address=fake.address() if fake.boolean(chance_of_getting_true=50) else None,
+        address=(
+            fake.address()[:10] if fake.boolean(chance_of_getting_true=50) else None
+        ),
         zipcode=FIXED_ZIPCODE,
     )
 
@@ -91,7 +93,7 @@ def generate_random_buyer_info() -> BuyerInfoCreate:
         phone=(
             fake.phone_number()[:5] if fake.boolean(chance_of_getting_true=50) else None
         ),
-        address=fake.address(),
+        address=fake.address()[:10],
     )
 
 
@@ -333,3 +335,33 @@ def test_create_seller_only_application_approved(session: Session):
     # post the request againt
     seller_response = requests.post(seller_url, json=seller_payload, headers=headers)
     assert seller_response.status_code == 200
+
+
+def test_ops_router(session: Session):
+    ops_applications = f"{BASE_URL}/ops/seller-application/all"
+    ops_token = "SPECIAL_OPS_KEY"
+
+    request = requests.get(
+        ops_applications, headers={"Authorization": f"Bearer {ops_token}"}
+    )
+
+    assert request.status_code == 200
+
+    first_application = request.json()[0]
+
+    put_application_url = f"{BASE_URL}/ops/seller-application"
+    update_request = requests.put(
+        put_application_url,
+        json={"application_id": first_application["id"], "status": "denied"},
+        headers={"Authorization": f"Bearer {ops_token}"},
+    )
+
+    update_request_json = update_request.json()
+
+    application: SellerApplication = (
+        session.query(SellerApplication)
+        .filter(SellerApplication.id == str(update_request_json["id"]))
+        .first()
+    )
+
+    assert application.status == "denied"
